@@ -2,164 +2,205 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Python Dev Studio</title>
+    <title>Python Pro Learning Studio</title>
     <link rel="stylesheet" href="https://pyscript.net/releases/2024.1.1/core.css">
     <script type="module" src="https://pyscript.net/releases/2024.1.1/core.js"></script>
 
     <style>
         * { box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #121212; color: #e0e0e0; margin: 0; display: flex; flex-direction: column; height: 100vh; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0f0f0f; color: #e0e0e0; margin: 0; display: flex; flex-direction: column; height: 100vh; }
         
-        header { background: #1f1f1f; padding: 10px 20px; border-bottom: 2px solid #4CAF50; display: flex; justify-content: space-between; align-items: center; }
+        header { background: #1a1a1a; padding: 12px 25px; border-bottom: 2px solid #4CAF50; display: flex; justify-content: space-between; align-items: center; }
         .main-container { display: flex; flex: 1; overflow: hidden; }
 
-        /* Левая панель - Скролл-зона */
-        .sidebar { width: 400px; background: #181818; border-right: 1px solid #333; overflow-y: auto; padding: 15px; }
+        /* Левая панель */
+        .sidebar { width: 420px; background: #141414; border-right: 1px solid #333; overflow-y: auto; padding: 20px; }
         .sidebar::-webkit-scrollbar { width: 6px; }
-        .sidebar::-webkit-scrollbar-thumb { background: #444; border-radius: 10px; }
+        .sidebar::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
 
-        .section-header { display: flex; align-items: center; justify-content: space-between; margin-top: 15px; border-bottom: 1px solid #4CAF50; padding-bottom: 3px; }
-        .section-header h3 { color: #4CAF50; margin: 0; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; }
+        .command-card { background: #1e1e1e; border: 1px solid #333; border-radius: 8px; padding: 12px; margin-bottom: 15px; transition: 0.3s; }
+        .command-card:hover { border-color: #4CAF50; }
+        .command-title { font-weight: bold; color: #4CAF50; margin-bottom: 8px; display: block; font-size: 14px; }
         
-        .help-btn { background: transparent; color: #888; border: 1px solid #444; border-radius: 4px; padding: 1px 5px; cursor: pointer; font-size: 10px; }
-        .help-btn:hover { color: #4CAF50; border-color: #4CAF50; }
-
-        .btn-project { background: linear-gradient(145deg, #2a2a2a, #222); color: #eee; border: 1px solid #444; padding: 10px; width: 100%; text-align: left; margin-top: 5px; cursor: pointer; border-radius: 6px; font-size: 13px; font-weight: bold; }
-        .btn-project:hover { border-color: #4CAF50; box-shadow: 0 0 10px rgba(76, 175, 80, 0.2); }
-
-        pre { background: #222; padding: 10px; border-radius: 6px; font-size: 12px; color: #dcdcaa; cursor: pointer; margin-top: 8px; border: 1px solid #333; transition: 0.2s; }
-        pre:hover { border-color: #4CAF50; background: #282828; }
-        code b { color: #4CAF50; } /* Подсветка названий в шпаргалке */
+        .card-actions { display: flex; gap: 8px; }
+        .btn-action { flex: 1; padding: 6px; border: 1px solid #444; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; text-transform: uppercase; transition: 0.2s; background: #252525; color: #ccc; }
+        .btn-info { border-color: #2196F3; color: #2196F3; }
+        .btn-info:hover { background: #2196F3; color: white; }
+        .btn-example { border-color: #4CAF50; color: #4CAF50; }
+        .btn-example:hover { background: #4CAF50; color: white; }
 
         /* Редактор */
-        .editor-section { flex: 1; display: flex; flex-direction: column; padding: 20px; background: #121212; }
-        #code-input { flex: 1; background: #1e1e1e; color: #dcdcaa; font-family: 'Consolas', 'Courier New', monospace; padding: 15px; border: 1px solid #333; border-radius: 8px; font-size: 16px; resize: none; line-height: 1.5; outline: none; box-shadow: inset 0 2px 10px rgba(0,0,0,0.5); }
+        .editor-section { flex: 1; display: flex; flex-direction: column; padding: 20px; }
+        #code-input { flex: 1; background: #1a1a1a; color: #dcdcaa; font-family: 'Fira Code', 'Consolas', monospace; padding: 20px; border: 1px solid #333; border-radius: 10px; font-size: 16px; resize: none; outline: none; line-height: 1.6; }
         
-        .controls { display: flex; gap: 10px; margin-top: 10px; }
-        #run-btn { flex: 2; background: #4CAF50; color: white; border: none; padding: 15px; border-radius: 6px; cursor: pointer; font-size: 18px; font-weight: bold; transition: 0.2s; }
-        #run-btn:hover { background: #45a049; filter: brightness(1.1); }
-        .btn-alt { flex: 1; background: #333; color: white; border: 1px solid #555; border-radius: 6px; cursor: pointer; font-size: 14px; }
+        .controls { display: flex; gap: 12px; margin-top: 15px; }
+        #run-btn { flex: 3; background: #4CAF50; color: white; border: none; padding: 18px; border-radius: 8px; cursor: pointer; font-size: 20px; font-weight: bold; box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3); }
+        #run-btn:hover { filter: brightness(1.1); transform: translateY(-2px); }
+        .btn-alt { flex: 1; background: #333; color: white; border: 1px solid #555; border-radius: 8px; cursor: pointer; }
 
-        #output { height: 200px; background: #000; color: #00ff00; padding: 15px; font-family: 'Consolas', monospace; border-radius: 8px; border: 1px solid #444; margin-top: 10px; overflow-y: auto; white-space: pre-wrap; font-size: 14px; }
+        #output { height: 220px; background: #000; color: #00ff00; padding: 15px; font-family: 'Consolas', monospace; border-radius: 8px; border: 1px solid #444; margin-top: 15px; overflow-y: auto; white-space: pre-wrap; font-size: 14px; }
 
-        /* Окно справки */
-        #modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(4px); }
-        .modal-content { background: #222; margin: 8% auto; padding: 25px; width: 60%; max-width: 650px; border-radius: 12px; border: 1px solid #4CAF50; line-height: 1.6; }
+        /* Модальное окно */
+        #modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); backdrop-filter: blur(8px); }
+        .modal-content { background: #1e1e1e; margin: 5% auto; padding: 40px; width: 70%; max-width: 800px; border-radius: 15px; border-left: 10px solid #2196F3; position: relative; box-shadow: 0 0 30px rgba(0,0,0,0.5); }
+        .close-btn { position: absolute; right: 20px; top: 15px; font-size: 30px; cursor: pointer; color: #888; }
+        .close-btn:hover { color: white; }
+        
+        .help-section { margin-bottom: 20px; }
+        .help-section b { color: #2196F3; font-size: 1.1em; }
+        .warning-box { background: #332b00; border-left: 4px solid #ffcc00; padding: 10px; margin: 10px 0; color: #fff; font-size: 0.9em; }
     </style>
 </head>
 <body>
 
 <div id="modal">
     <div class="modal-content">
-        <span style="float:right; cursor:pointer; font-size:24px;" onclick="closeHelp()">&times;</span>
-        <h2 id="modal-title" style="color:#4CAF50; margin-top:0;"></h2>
-        <div id="modal-body"></div>
+        <span class="close-btn" onclick="closeHelp()">&times;</span>
+        <h2 id="modal-title" style="margin-top:0; color:#2196F3"></h2>
+        <div id="modal-body" style="font-size: 16px; line-height: 1.7;"></div>
     </div>
 </div>
 
 <header>
-    <h2 style="margin:0; font-size: 20px;">🐍 Python Dev Studio</h2>
-    <div id="save-status" style="font-size: 11px; color: #666;">Готов к работе</div>
+    <h2 style="margin:0;">🐍 Python Learning Studio</h2>
+    <div id="save-status" style="font-size: 12px; color: #4CAF50; font-weight: bold;">СИСТЕМА ГОТОВА</div>
 </header>
 
 <div class="main-container">
     <div class="sidebar">
-        <button class="btn-project" onclick="loadProject('pass')">🔐 ГЕНЕРАТОР ПАРОЛЕЙ (Пример)</button>
+        <h3 style="color: #888; font-size: 12px; text-transform: uppercase; margin-bottom: 20px;">Учебные модули</h3>
 
-        <div class="section-header">
-            <h3>📥 ВВОД И ВЫВОД</h3>
-            <button class="help-btn" onclick="showHelp('io')">?</button>
-        </div>
-        <pre onclick="insertSnippet('print(\'Результат:\', 10 + 5)')">Печать в консоль</pre>
-        <pre onclick="insertSnippet('name = \'Алекс\'\nprint(f\'Привет, {name}!\')')">F-строки (шаблоны)</pre>
-
-        <div class="section-header">
-            <h3>🔢 МАТЕМАТИКА</h3>
-            <button class="help-btn" onclick="showHelp('math')">?</button>
-        </div>
-        <pre onclick="insertSnippet('import math\nprint(math.sqrt(16))  # Корень\nprint(math.ceil(4.2)) # Округление вверх')">Библиотека Math</pre>
-        <pre onclick="insertSnippet('print(10 % 3)  # Остаток от деления\nprint(2 ** 3)  # Возведение в степень')">Операторы</pre>
-
-        <div class="section-header">
-            <h3>📚 СПИСКИ И ДАННЫЕ</h3>
-            <button class="help-btn" onclick="showHelp('lists')">?</button>
-        </div>
-        <pre onclick="insertSnippet('users = [\'Admin\', \'User1\']\nusers.append(\'Guest\')\nprint(len(users))')">Работа со списком</pre>
-        <pre onclick="insertSnippet('nums = [1, 5, 2]\nnums.sort()\nprint(nums)')">Сортировка</pre>
-
-        <div class="section-header">
-            <h3>🛡 ЗАЩИТА ОТ ОШИБОК</h3>
-            <button class="help-btn" onclick="showHelp('errors')">?</button>
-        </div>
-        <pre onclick="insertSnippet('try:\n    res = 10 / 0\nexcept ZeroDivisionError:\n    print(\'На ноль делить нельзя!\')')">Try / Except</pre>
-
-        <div class="section-header">
-            <h3>💡 ПРАВИЛА (СИНТАКСИС)</h3>
-        </div>
-        <div style="font-size: 12px; color: #aaa; padding: 10px 0;">
-            • <b>Отступы:</b> Всегда 4 пробела внутри if, for, def.<br><br>
-            • <b>Комментарии:</b> Используй # для заметок.<br><br>
-            • <b>Типы данных:</b> <code>"текст"</code>, <code>10</code> (число), <code>10.5</code> (дробь).
+        <div class="command-card">
+            <span class="command-title">Вывод данных (print)</span>
+            <div class="card-actions">
+                <button class="btn-action btn-info" onclick="showHelp('print')">Инфо</button>
+                <button class="btn-action btn-example" onclick="insertExample('print(\'Привет, мир!\')\nprint(5 + 10)')">Пример</button>
+            </div>
         </div>
 
-        <button class="btn-project" style="margin-top:20px; border-color:#ff5555; color:#ff5555;" onclick="clearAll()">🗑 ОЧИСТИТЬ РЕДАКТОР</button>
+        <div class="command-card">
+            <span class="command-title">Переменные (x = 10)</span>
+            <div class="card-actions">
+                <button class="btn-action btn-info" onclick="showHelp('vars')">Инфо</button>
+                <button class="btn-action btn-example" onclick="insertExample('name = \"Алекс\"\nage = 25\nprint(f\"{name} - {age} лет\")')">Пример</button>
+            </div>
+        </div>
+
+        <div class="command-card">
+            <span class="command-title">Условия (if / else)</span>
+            <div class="card-actions">
+                <button class="btn-action btn-info" onclick="showHelp('if')">Инфо</button>
+                <button class="btn-action btn-example" onclick="insertExample('score = 85\nif score >= 90:\n    print(\"Отлично!\")\nelif score >= 70:\n    print(\"Хорошо\")\nelse:\n    print(\"Надо подучить\")')">Пример</button>
+            </div>
+        </div>
+
+        <div class="command-card">
+            <span class="command-title">Списки (Массивы)</span>
+            <div class="card-actions">
+                <button class="btn-action btn-info" onclick="showHelp('lists')">Инфо</button>
+                <button class="btn-action btn-example" onclick="insertExample('items = [\"Меч\", \"Щит\"]\nitems.append(\"Зелье\")\nprint(f\"В сумке: {items}\")\nprint(f\"Первый предмет: {items[0]}\")')">Пример</button>
+            </div>
+        </div>
+
+        <div class="command-card">
+            <span class="command-title">Циклы (for / range)</span>
+            <div class="card-actions">
+                <button class="btn-action btn-info" onclick="showHelp('loops')">Инфо</button>
+                <button class="btn-action btn-example" onclick="insertExample('for i in range(5):\n    print(f\"Повторение №{i+1}\")')">Пример</button>
+            </div>
+        </div>
+
+        <button class="btn-action" style="margin-top:20px; width: 100%; border-color: #ff5555; color: #ff5555;" onclick="clearAll()">🗑 Очистить редактор</button>
     </div>
 
     <div class="editor-section">
-        <textarea id="code-input" oninput="saveCode()" placeholder="Выбери команду слева или начни писать код..."></textarea>
+        <textarea id="code-input" oninput="saveCode()" placeholder="Выбери команду или пример слева..."></textarea>
         
         <div class="controls">
-            <button id="run-btn" py-click="run_python">ЗАПУСТИТЬ КОД</button>
+            <button id="run-btn" py-click="run_python">▶ ЗАПУСТИТЬ КОД</button>
             <button class="btn-alt" onclick="downloadCode()">💾 .PY ФАЙЛ</button>
         </div>
 
-        <div id="output">Здесь появится результат выполнения...</div>
+        <div id="output">Результат вычислений появится здесь...</div>
     </div>
 </div>
 
 <script>
-    const projects = {
-        pass: "import random\nsymbols = 'abcdefghijk1234567890!@#$%^&*'\npassword = ''.join(random.choice(symbols) for _ in range(12))\nprint(f'Сгенерирован сложный пароль: {password}')"
+    const helpText = {
+        print: {
+            title: "Голос программы: Функция print()",
+            body: `
+                <div class="help-section"><b>Что это:</b> Это главная команда, которая заставляет компьютер "говорить" с тобой, выводя текст или числа в консоль.</div>
+                <div class="help-section"><b>Зачем нужно:</b> Чтобы видеть результаты расчетов, проверять ошибки или просто приветствовать пользователя.</div>
+                <div class="warning-box">📌 <b>Важно:</b> Текст всегда пишется в кавычках: "Привет". Числа пишутся без кавычек: 100.</div>
+            `
+        },
+        vars: {
+            title: "Цифровая память: Переменные",
+            body: `
+                <div class="help-section"><b>Что это:</b> Это именованная "коробка" в памяти компьютера. Мы даем ей имя (например, <code>x</code>) и кладем туда данные (число 5).</div>
+                <div class="help-section"><b>Зачем нужно:</b> Чтобы компьютер мог что-то запомнить. Например, имя игрока или количество очков.</div>
+                <div class="warning-box">⚠️ <b>Правило:</b> Имя переменной не может начинаться с цифры и не должно содержать пробелов!</div>
+            `
+        },
+        if: {
+            title: "Логика выбора: If / Else",
+            body: `
+                <div class="help-section"><b>Что это:</b> Развилка на дороге. Программа проверяет условие: если оно правда — идем направо, если нет — налево.</div>
+                <div class="help-section"><b>Синтаксис:</b> <code>if условие:</code>. Двоеточие в конце — обязательно!</div>
+                <div class="warning-box">🛑 <b>Критично:</b> Всегда делай 4 пробела (отступ) в строке ПОСЛЕ условия. Это показывает Python, какой код относится к этому условию.</div>
+            `
+        },
+        lists: {
+            title: "Органайзер: Списки",
+            body: `
+                <div class="help-section"><b>Что это:</b> Список покупок или инвентарь героя. Одна переменная, которая хранит сразу много предметов.</div>
+                <div class="help-section"><b>Нумерация:</b> Запомни навсегда — программисты начинают считать с <b>0</b>. Первый предмет в списке имеет индекс [0].</div>
+                <div class="help-section"><b>Функция append:</b> Используется для добавления нового предмета в конец списка.</div>
+            `
+        },
+        loops: {
+            title: "Бесконечный двигатель: Цикл For",
+            body: `
+                <div class="help-section"><b>Что это:</b> Команда, которая заставляет компьютер повторять одно и то же действие много раз.</div>
+                <div class="help-section"><b>Функция range(5):</b> Создает "очередь" из пяти чисел (0, 1, 2, 3, 4). Цикл пройдет по ним по порядку.</div>
+                <div class="warning-box">💡 <b>Совет:</b> Используй циклы, чтобы не писать 10 раз одну и ту же команду print.</div>
+            `
+        }
     };
 
-    const helpData = {
-        io: { title: "📥 Ввод и Вывод", body: "<b>print()</b> выводит данные на экран. <br><b>F-строки</b> (буква f перед кавычками) позволяют удобно вставлять переменные прямо внутрь текста с помощью фигурных скобок <code>{ }</code>." },
-        math: { title: "🔢 Математика", body: "Python умеет считать всё! <br><code>%</code> — остаток от деления (полезно для проверки четности). <br><code>**</code> — степень. <br>Для сложных вещей (синусы, корни) используй <code>import math</code>." },
-        lists: { title: "📚 Списки", body: "Список — это коллекция элементов. <br><code>.append()</code> добавляет элемент в конец. <br><code>len()</code> показывает длину списка. <br>Помни: первый элемент всегда под номером <b>0</b>." },
-        errors: { title: "🛡 Обработка ошибок", body: "Блок <code>try</code> пытается выполнить код, а <code>except</code> срабатывает, если случилась ошибка. Это не дает твоей программе 'вылететь' с грохотом." }
-    };
-
-    function loadProject(n) { document.getElementById('code-input').value = projects[n]; saveCode(); }
-    function showHelp(k) { 
-        document.getElementById('modal-title').innerText = helpData[k].title;
-        document.getElementById('modal-body').innerHTML = helpData[k].body;
+    function showHelp(key) {
+        document.getElementById('modal-title').innerText = helpText[key].title;
+        document.getElementById('modal-body').innerHTML = helpText[key].body;
         document.getElementById('modal').style.display = "block";
     }
+
     function closeHelp() { document.getElementById('modal').style.display = "none"; }
-    function insertSnippet(s) { 
-        const area = document.getElementById('code-input');
-        area.value += (area.value ? "\n\n" : "") + s; 
-        saveCode(); 
-    }
     
-    function saveCode() {
-        localStorage.setItem('py_dev_studio', document.getElementById('code-input').value);
-        document.getElementById('save-status').innerText = "Изменено: " + new Date().toLocaleTimeString();
+    function insertExample(code) {
+        const area = document.getElementById('code-input');
+        area.value += (area.value ? "\n\n" : "") + code;
+        saveCode();
     }
 
-    function clearAll() { if(confirm("Удалить весь код?")) { document.getElementById('code-input').value = ""; saveCode(); } }
+    function saveCode() {
+        localStorage.setItem('py_learn_code', document.getElementById('code-input').value);
+        document.getElementById('save-status').innerText = "СОХРАНЕНО: " + new Date().toLocaleTimeString();
+    }
+
+    function clearAll() { if(confirm("Удалить всё?")) { document.getElementById('code-input').value = ""; saveCode(); } }
 
     function downloadCode() {
         const text = document.getElementById('code-input').value;
         const blob = new Blob([text], { type: 'text/plain' });
         const a = document.createElement('a');
-        a.download = "my_program.py";
+        a.download = "my_lesson.py";
         a.href = URL.createObjectURL(blob);
         a.click();
     }
 
     window.onload = () => {
-        const saved = localStorage.getItem('py_dev_studio');
+        const saved = localStorage.getItem('py_learn_code');
         if(saved) document.getElementById('code-input').value = saved;
     }
 </script>
@@ -169,16 +210,14 @@
     from js import document
     def run_python(event):
         out = document.getElementById("output")
-        out.innerText = "Исполнение...\n"
+        out.innerText = ">>> Запуск программы...\n"
         code = document.getElementById("code-input").value
         class Writer:
             def write(self, t): out.innerText += t
             def flush(self): pass
         sys.stdout = Writer()
-        try: 
-            exec(code)
-        except Exception as e: 
-            out.innerText += f"\n[!] ОШИБКА: {e}"
+        try: exec(code)
+        except Exception as e: out.innerText += f"\n[!] ОШИБКА В КОДЕ: {e}"
 </script>
 </body>
 </html>
