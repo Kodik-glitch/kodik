@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Python Learn & Code</title>
+    <title>Python Tutor IDE</title>
     <link rel="stylesheet" href="https://pyscript.net/releases/2024.1.1/core.css">
     <script type="module" src="https://pyscript.net/releases/2024.1.1/core.js"></script>
 
@@ -11,115 +11,146 @@
         body { font-family: 'Segoe UI', sans-serif; background: #121212; color: #e0e0e0; margin: 0; display: flex; flex-direction: column; height: 100vh; }
         
         header { background: #1f1f1f; padding: 10px 20px; border-bottom: 1px solid #333; text-align: center; }
-        
         .main-container { display: flex; flex: 1; overflow: hidden; }
 
-        /* Левая панель: Справочник */
-        .sidebar { width: 350px; background: #181818; border-right: 1px solid #333; overflow-y: auto; padding: 15px; }
-        .cheat-sheet h3 { color: #4CAF50; border-bottom: 1px solid #4CAF50; padding-bottom: 5px; margin-top: 20px; }
-        pre { background: #252525; padding: 10px; border-radius: 4px; font-size: 13px; color: #dcdcaa; overflow-x: auto; cursor: pointer; position: relative; }
+        /* Левая панель */
+        .sidebar { width: 380px; background: #181818; border-right: 1px solid #333; overflow-y: auto; padding: 15px; }
+        .section-header { display: flex; align-items: center; justify-content: space-between; margin-top: 20px; border-bottom: 1px solid #4CAF50; }
+        .section-header h3 { color: #4CAF50; margin: 5px 0; font-size: 16px; }
+        
+        /* Кнопка помощи */
+        .help-btn { 
+            background: #444; color: #fff; border: none; border-radius: 50%; 
+            width: 20px; height: 20px; cursor: pointer; font-size: 12px; font-weight: bold;
+        }
+        .help-btn:hover { background: #666; }
+
+        pre { background: #252525; padding: 10px; border-radius: 4px; font-size: 13px; color: #dcdcaa; overflow-x: auto; cursor: pointer; margin-top: 5px; position: relative; }
         pre:hover { background: #303030; }
-        pre::after { content: "нажми, чтобы скопировать"; position: absolute; top: 2px; right: 5px; font-size: 9px; color: #888; }
 
-        /* Правая панель: Редактор */
-        .editor-section { flex: 1; display: flex; flex-direction: column; padding: 20px; background: #121212; }
-        #code-input { flex: 1; background: #1e1e1e; color: #dcdcaa; font-family: 'Consolas', monospace; padding: 15px; border: 1px solid #333; border-radius: 5px; font-size: 16px; resize: none; margin-bottom: 10px; }
-        #run-btn { background: #4CAF50; color: white; border: none; padding: 15px; border-radius: 4px; cursor: pointer; font-size: 18px; font-weight: bold; }
-        #run-btn:hover { background: #45a049; }
-
-        /* Вывод консоли */
+        /* Правая панель */
+        .editor-section { flex: 1; display: flex; flex-direction: column; padding: 20px; }
+        #code-input { flex: 1; background: #1e1e1e; color: #dcdcaa; font-family: 'Consolas', monospace; padding: 15px; border: 1px solid #333; border-radius: 5px; font-size: 16px; resize: none; }
+        #run-btn { background: #4CAF50; color: white; border: none; padding: 15px; border-radius: 4px; cursor: pointer; font-size: 18px; font-weight: bold; margin-top: 10px; }
         #output { height: 150px; background: #000; color: #00ff00; padding: 15px; font-family: monospace; border-radius: 5px; border: 1px solid #444; margin-top: 10px; overflow-y: auto; white-space: pre-wrap; }
+
+        /* Модальное окно (подсказка) */
+        #modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); }
+        .modal-content { background: #252525; margin: 15% auto; padding: 20px; width: 50%; border-radius: 8px; border: 1px solid #4CAF50; color: #eee; }
+        .close-btn { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
 
-<header>
-    <h2 style="margin:0;">🐍 Python Helper IDE</h2>
-</header>
+<div id="modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeHelp()">&times;</span>
+        <h2 id="modal-title">Справка</h2>
+        <p id="modal-text"></p>
+    </div>
+</div>
+
+<header><h2>🐍 Python Helper IDE</h2></header>
 
 <div class="main-container">
-    <div class="sidebar cheat-sheet">
-        <p style="font-size: 12px; color: #aaa;">Кликни на блок, чтобы скопировать код в буфер обмена</p>
-        
-        <h3>Вывод и переменные</h3>
-        <pre onclick="copyCode(this)">print("Привет!")
-name = "Алекс"
+    <div class="sidebar">
+        <p style="font-size: 12px; color: #888;">Нажми на код, чтобы скопировать. Нажми на [?], чтобы узнать, что это.</p>
+
+        <div class="section-header">
+            <h3>Переменные</h3>
+            <button class="help-btn" onclick="showHelp('vars')">?</button>
+        </div>
+        <pre onclick="copyCode(this)">name = "Алекс"
 age = 20</pre>
 
-        <h3>Условия (Если)</h3>
+        <div class="section-header">
+            <h3>Условия (If)</h3>
+            <button class="help-btn" onclick="showHelp('if')">?</button>
+        </div>
         <pre onclick="copyCode(this)">if age >= 18:
     print("Доступ разрешен")
 else:
-    print("Маловат еще")</pre>
+    print("Запрещено")</pre>
 
-        <h3>Цикл For (Повторение)</h3>
-        <pre onclick="copyCode(this)">for i in range(5):
-    print(f"Повтор №{i}")</pre>
+        <div class="section-header">
+            <h3>Списки (Массивы)</h3>
+            <button class="help-btn" onclick="showHelp('lists')">?</button>
+        </div>
+        <pre onclick="copyCode(this)">items = ["хлеб", "молоко"]
+items.append("масло")</pre>
 
-        <h3>Списки (Массивы)</h3>
-        <pre onclick="copyCode(this)">fruits = ["яблоко", "банан"]
-fruits.append("груша")
-print(fruits[0])</pre>
+        <div class="section-header">
+            <h3>Циклы (For)</h3>
+            <button class="help-btn" onclick="showHelp('loops')">?</button>
+        </div>
+        <pre onclick="copyCode(this)">for i in range(3):
+    print("Привет!")</pre>
 
-        <h3>Функции</h3>
-        <pre onclick="copyCode(this)">def say_hello(text):
-    return f"Вы написали: {text}"
-
-print(say_hello("Тест"))</pre>
-
-        <h3>Классы (Объекты)</h3>
-        <pre onclick="copyCode(this)">class Dog:
+        <div class="section-header">
+            <h3>Классы (ООП)</h3>
+            <button class="help-btn" onclick="showHelp('classes')">?</button>
+        </div>
+        <pre onclick="copyCode(this)">class Person:
     def __init__(self, name):
         self.name = name
-    
-    def bark(self):
-        return f"{self.name} говорит Гав!"
 
-my_dog = Dog("Шарик")
-print(my_dog.bark())</pre>
+p = Person("Иван")</pre>
     </div>
 
     <div class="editor-section">
-        <textarea id="code-input" placeholder="Вставь код из шпаргалки или напиши свой...">
-# Напиши код здесь
-print("Консоль готова к работе!")
-        </textarea>
-        
-        <button id="run-btn" py-click="run_python">ЗАПУСТИТЬ КОД</button>
-
-        <div id="output">Здесь появится результат...</div>
+        <textarea id="code-input" placeholder="Пиши код здесь..."></textarea>
+        <button id="run-btn" py-click="run_python">ЗАПУСТИТЬ</button>
+        <div id="output">Результат...</div>
     </div>
 </div>
 
 <script>
-    function copyCode(element) {
-        const text = element.innerText.replace("нажми, чтобы скопировать", "").trim();
-        navigator.clipboard.writeText(text);
-        alert("Код скопирован! Теперь вставь его в окно редактора.");
+    const helpData = {
+        vars: {
+            title: "Переменные",
+            text: "Это 'коробки', в которых лежат данные. Например, в 'name' мы положили текст, а в 'age' число. Мы используем их, чтобы компьютер запомнил информацию для дальнейшей работы."
+        },
+        if: {
+            title: "Условия (If-Else)",
+            text: "Это развилка в программе. Если условие верно (True), выполняется один код, если нет (Else) — другой. Как в жизни: 'Если идет дождь — возьми зонт, иначе — не бери'."
+        },
+        lists: {
+            title: "Списки (Массивы)",
+            text: "Это список предметов под одним именем. Представь список покупок. Ты можешь добавлять туда вещи (append), удалять их или доставать по номеру (индексу)."
+        },
+        loops: {
+            title: "Циклы (For)",
+            text: "Нужны, чтобы не писать одну и ту же команду много раз. Цикл заставляет компьютер повторять действие столько раз, сколько ты укажешь."
+        },
+        classes: {
+            title: "Классы",
+            text: "Это чертёж или шаблон для создания объектов. Например, класс 'Машина' описывает, что у всех машин есть колеса и руль. А конкретная 'Лада' — это уже объект, сделанный по этому чертежу."
+        }
+    };
+
+    function showHelp(key) {
+        document.getElementById('modal-title').innerText = helpData[key].title;
+        document.getElementById('modal-text').innerText = helpData[key].text;
+        document.getElementById('modal').style.display = "block";
     }
+
+    function closeHelp() { document.getElementById('modal').style.display = "none"; }
+    function copyCode(e) { navigator.clipboard.writeText(e.innerText); }
 </script>
 
 <script type="py">
     import sys
     from js import document
-
     def run_python(event):
-        out_div = document.getElementById("output")
-        out_div.innerText = ""
-        user_code = document.getElementById("code-input").value
-        
-        class OutputWriter:
-            def write(self, text):
-                out_div.innerText += text
+        out = document.getElementById("output")
+        out.innerText = ""
+        code = document.getElementById("code-input").value
+        class Writer:
+            def write(self, t): out.innerText += t
             def flush(self): pass
-        
-        sys.stdout = OutputWriter()
-        
-        try:
-            exec(user_code)
-        except Exception as e:
-            out_div.innerText += f"\nОШИБКА: {e}"
+        sys.stdout = Writer()
+        try: exec(code)
+        except Exception as e: out.innerText += f"\nОшибка: {e}"
 </script>
-
 </body>
 </html>
