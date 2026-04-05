@@ -1,19 +1,56 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-    <link rel="stylesheet" href="https://pyscript.net/releases/2024.1.1/core.css" />
-    <script type="module" src="https://pyscript.net/releases/2024.1.1/core.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мой Python Редактор</title>
+
     <link rel="stylesheet" href="https://pyscript.net/releases/2024.1.1/core.css">
-<script type="module" src="https://pyscript.net/releases/2024.1.1/core.js"></script>
+    <script type="module" src="https://pyscript.net/releases/2024.1.1/core.js"></script>
+
+    <style>
+        body { font-family: sans-serif; margin: 20px; background-color: #f4f4f9; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1 { color: #333; }
+        #output { 
+            background: #272822; color: #f8f8f2; padding: 15px; 
+            border-radius: 5px; min-height: 50px; white-space: pre-wrap; margin-top: 10px;
+        }
+        py-editor { border: 1px solid #ccc; border-radius: 5px; margin-bottom: 10px; display: block; }
+    </style>
 </head>
 <body>
 
-    <h1>Мой Python на сайте</h1>
-    
-    <script type="py">
-        from datetime import datetime
-        print(f"Привет! Текущее время: {datetime.now()}")
+<div class="container">
+    <h1>🐍 Python Online Editor</h1>
+    <p>Пиши код ниже и нажимай <b>Shift + Enter</b> для запуска:</p>
+
+    <script type="py" editor>
+def greet(name):
+    return f"Привет, {name}! Python работает прямо в GitHub Pages."
+
+print(greet("Друг"))
+print("2 + 2 =", 2 + 2)
     </script>
+
+    <h3>Результат выполнения:</h3>
+    <div id="output"></div>
+</div>
+
+<script type="py">
+    # Этот блок перенаправляет стандартный вывод print() в наш div
+    import sys
+    from js import document
+
+    class ElementOutput:
+        def write(self, text):
+            element = document.getElementById("output")
+            element.innerText += text
+        def flush(self):
+            pass
+
+    sys.stdout = ElementOutput()
+</script>
 
 </body>
 </html>
