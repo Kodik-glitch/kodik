@@ -24,7 +24,7 @@
         .nav-header { display: flex; align-items: center; margin-bottom: 12px; font-size: 16px; font-weight: 600; }
         .nav-header span { margin-right: 12px; font-size: 20px; width: 24px; text-align: center; }
 
-        /* Кнопка "Подробнее" (Синяя версия) */
+        /* Кнопка "Подробнее" */
         .btn-info { 
             width: 100%; 
             background: #21262d; 
@@ -55,14 +55,27 @@
         
         .action-bar { display: flex; gap: 12px; margin-top: 15px; }
         
-        /* Кнопка ЗАПУСТИТЬ (Синяя) */
+        /* Кнопка ЗАПУСТИТЬ */
         #run-btn { flex: 3; background: #005cc5; color: white; border: none; padding: 15px; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: bold; transition: 0.2s; }
         #run-btn:hover { background: #0366d6; transform: scale(1.01); box-shadow: 0 0 12px rgba(0, 92, 197, 0.3); }
         
         .btn-secondary { flex: 1; background: #21262d; color: #c9d1d9; border: 1px solid #30363d; border-radius: 8px; cursor: pointer; transition: 0.2s; }
         .btn-secondary:hover { background: #30363d; color: #58a6ff; }
 
-        #output { height: 180px; background: #010409; color: #7ee787; padding: 15px; font-family: monospace; border-radius: 12px; border: 1px solid #30363d; margin-top: 15px; overflow-y: auto; white-space: pre-wrap; box-shadow: inset 0 0 10px rgba(0,0,0,0.5); }
+        /* Окно вывода (Консоль) - Теперь текст СИНИЙ */
+        #output { 
+            height: 180px; 
+            background: #010409; 
+            color: #58a6ff; /* Изменено на синий */
+            padding: 15px; 
+            font-family: monospace; 
+            border-radius: 12px; 
+            border: 1px solid #30363d; 
+            margin-top: 15px; 
+            overflow-y: auto; 
+            white-space: pre-wrap; 
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5); 
+        }
 
         /* Модальное окно */
         #modal { display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); }
@@ -73,7 +86,6 @@
         .example-block { background: #010409; padding: 20px; border-radius: 12px; border: 1px solid #30363d; margin-top: 25px; position: relative; }
         .example-code { color: #d7dae0; font-family: 'Consolas', monospace; white-space: pre; font-size: 14px; display: block; overflow-x: auto; line-height: 1.5; }
         
-        /* Кнопка Копировать (Синяя) */
         .copy-btn { position: absolute; right: 12px; top: -14px; background: #005cc5; color: white; border: none; padding: 8px 16px; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3); transition: 0.2s; }
         .copy-btn:hover { background: #0366d6; transform: scale(1.05); }
     </style>
@@ -90,13 +102,13 @@
             <button class="copy-btn" onclick="copyExample()">Копировать код</button>
             <div id="m-code" class="example-code"></div>
         </div>
-        <p style="font-size: 12px; color: #8b949e; margin-top: 15px; text-align: center;">Вставь скопированный код в редактор справа, чтобы запустить его.</p>
+        <p style="font-size: 12px; color: #8b949e; margin-top: 15px; text-align: center;">Вставь скопированный код в редактор справа.</p>
     </div>
 </div>
 
 <header>
     <h2 style="margin:0; font-size: 20px; letter-spacing: 1px;">🐍 PYTHON <span style="color: #58a6ff;">ACADEMY</span></h2>
-    <div id="status" style="font-size: 12px; color: #8b949e; background: #010409; padding: 6px 15px; border-radius: 20px; border: 1px solid #30363d;">Студия готова (Версия Blue)</div>
+    <div id="status" style="font-size: 12px; color: #8b949e; background: #010409; padding: 6px 15px; border-radius: 20px; border: 1px solid #30363d;">Студия готова</div>
 </header>
 
 <div class="main-container">
@@ -140,56 +152,16 @@
 
 <script>
     const explanations = {
-        print: { 
-            title: "Вывод данных", 
-            desc: "print() выводит текст или числа в окно результата.", 
-            code: 'print("Привет, мир!")' 
-        },
-        vars: { 
-            title: "Переменные", 
-            desc: "Переменные — это имена для хранения данных.", 
-            code: 'name = "Cyber"\nprint(name)' 
-        },
-        math: { 
-            title: "Математика", 
-            desc: "Используй +, -, *, / для вычислений.", 
-            code: 'print(10 + 5 * 2)' 
-        },
-        if: { 
-            title: "Условия", 
-            desc: "Делает выбор: если условие верно, код работает.", 
-            code: 'x = 10\nif x > 5:\n    print("Больше!")' 
-        },
-        lists: { 
-            title: "Списки", 
-            desc: "Список хранит много элементов сразу.", 
-            code: 'items = ["A", "B", "C"]\nprint(items[0])' 
-        },
-        dicts: { 
-            title: "Словари", 
-            desc: "Хранят данные в парах Ключ: Значение.", 
-            code: 'data = {"id": 1, "val": 100}\nprint(data["val"])' 
-        },
-        for: { 
-            title: "Цикл For", 
-            desc: "Повторяет действия для элементов списка.", 
-            code: 'for i in range(3):\n    print(f"Шаг {i}")' 
-        },
-        while: { 
-            title: "Цикл While", 
-            desc: "Работает, пока условие верно.", 
-            code: 'i = 3\nwhile i > 0:\n    print(i)\n    i -= 1' 
-        },
-        funcs: { 
-            title: "Функции", 
-            desc: "Блок кода, который можно вызывать по имени.", 
-            code: 'def hi():\n    print("Hi!")\n\nhi()' 
-        },
-        errors: { 
-            title: "Ошибки", 
-            desc: "try/except ловит ошибки, чтобы код не 'падал'.", 
-            code: 'try:\n    1/0\nexcept:\n    print("Ошибка!")' 
-        }
+        print: { title: "Вывод данных", desc: "print() выводит текст или числа в консоль.", code: 'print("Привет!")' },
+        vars: { title: "Переменные", desc: "Контейнеры для хранения данных.", code: 'x = 10\nprint(x)' },
+        math: { title: "Математика", desc: "Сложение, вычитание и другие операции.", code: 'print(5 * 5)' },
+        if: { title: "Условия", desc: "Проверка логики (истина/ложь).", code: 'if 5 > 2:\n    print("Да!")' },
+        lists: { title: "Списки", desc: "Коллекции элементов в одной переменной.", code: 'items = [1, 2, 3]\nprint(items)' },
+        dicts: { title: "Словари", desc: "Данные в формате Ключ: Значение.", code: 'user = {"name": "Alex"}\nprint(user["name"])' },
+        for: { title: "Цикл For", desc: "Перебор элементов коллекции.", code: 'for i in range(3):\n    print(i)' },
+        while: { title: "Цикл While", desc: "Работает, пока условие истинно.", code: 'i = 0\nwhile i < 3:\n    print(i)\n    i += 1' },
+        funcs: { title: "Функции", desc: "Именованные блоки кода.", code: 'def hello():\n    print("Привет!")\n\nhello()' },
+        errors: { title: "Ошибки", desc: "Обработка исключительных ситуаций.", code: 'try:\n    1/0\nexcept:\n    print("Ошибка!")' }
     };
 
     let currentExample = "";
@@ -209,26 +181,22 @@
         navigator.clipboard.writeText(currentExample);
         const btn = document.querySelector('.copy-btn');
         btn.innerText = "Скопировано! ✅";
-        btn.style.background = "#0366d6";
-        setTimeout(() => { 
-            btn.innerText = "Копировать код"; 
-            btn.style.background = "#005cc5";
-        }, 1500);
+        setTimeout(() => { btn.innerText = "Копировать код"; }, 1500);
     }
 
-    function save() { localStorage.setItem('py_studio_blue', document.getElementById('code-input').value); }
+    function save() { localStorage.setItem('py_studio_final_blue', document.getElementById('code-input').value); }
     function clearEditor() { if(confirm("Стереть всё?")) { document.getElementById('code-input').value = ""; save(); } }
     
     function download() {
         const blob = new Blob([document.getElementById('code-input').value], { type: 'text/plain' });
         const a = document.createElement('a');
-        a.download = "script.py";
+        a.download = "main.py";
         a.href = URL.createObjectURL(blob);
         a.click();
     }
 
     window.onload = () => {
-        const saved = localStorage.getItem('py_studio_blue');
+        const saved = localStorage.getItem('py_studio_final_blue');
         if(saved) document.getElementById('code-input').value = saved;
     }
 </script>
