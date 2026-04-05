@@ -2,86 +2,112 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Python Console</title>
+    <title>Python Learn & Code</title>
     <link rel="stylesheet" href="https://pyscript.net/releases/2024.1.1/core.css">
     <script type="module" src="https://pyscript.net/releases/2024.1.1/core.js"></script>
 
     <style>
-        body { font-family: sans-serif; background: #121212; color: #e0e0e0; padding: 20px; }
-        .box { max-width: 800px; margin: auto; }
+        * { box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: #121212; color: #e0e0e0; margin: 0; display: flex; flex-direction: column; height: 100vh; }
         
-        /* Поле ввода кода */
-        #code-input {
-            width: 100%;
-            height: 200px;
-            background: #1e1e1e;
-            color: #dcdcaa;
-            font-family: 'Consolas', monospace;
-            padding: 15px;
-            border: 1px solid #333;
-            border-radius: 5px;
-            font-size: 16px;
-            resize: vertical;
-        }
+        header { background: #1f1f1f; padding: 10px 20px; border-bottom: 1px solid #333; text-align: center; }
+        
+        .main-container { display: flex; flex: 1; overflow: hidden; }
 
-        /* Кнопка запуска */
-        #run-btn {
-            background: #4CAF50;
-            color: white;
-            border: none;
-            padding: 10px 25px;
-            margin-top: 10px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-        }
+        /* Левая панель: Справочник */
+        .sidebar { width: 350px; background: #181818; border-right: 1px solid #333; overflow-y: auto; padding: 15px; }
+        .cheat-sheet h3 { color: #4CAF50; border-bottom: 1px solid #4CAF50; padding-bottom: 5px; margin-top: 20px; }
+        pre { background: #252525; padding: 10px; border-radius: 4px; font-size: 13px; color: #dcdcaa; overflow-x: auto; cursor: pointer; position: relative; }
+        pre:hover { background: #303030; }
+        pre::after { content: "нажми, чтобы скопировать"; position: absolute; top: 2px; right: 5px; font-size: 9px; color: #888; }
+
+        /* Правая панель: Редактор */
+        .editor-section { flex: 1; display: flex; flex-direction: column; padding: 20px; background: #121212; }
+        #code-input { flex: 1; background: #1e1e1e; color: #dcdcaa; font-family: 'Consolas', monospace; padding: 15px; border: 1px solid #333; border-radius: 5px; font-size: 16px; resize: none; margin-bottom: 10px; }
+        #run-btn { background: #4CAF50; color: white; border: none; padding: 15px; border-radius: 4px; cursor: pointer; font-size: 18px; font-weight: bold; }
         #run-btn:hover { background: #45a049; }
 
-        /* Консоль вывода */
-        #output {
-            margin-top: 20px;
-            background: #000;
-            color: #00ff00;
-            padding: 15px;
-            font-family: monospace;
-            border-radius: 5px;
-            min-height: 100px;
-            white-space: pre-wrap;
-            border: 1px solid #444;
-        }
+        /* Вывод консоли */
+        #output { height: 150px; background: #000; color: #00ff00; padding: 15px; font-family: monospace; border-radius: 5px; border: 1px solid #444; margin-top: 10px; overflow-y: auto; white-space: pre-wrap; }
     </style>
 </head>
 <body>
 
-<div class="box">
-    <h2>💻 Моя Python Консоль</h2>
-    
-    <textarea id="code-input" placeholder="Напиши свой Python код здесь...">
-print("Привет с GitHub!")
-x = 10
-y = 5
-print(f"Результат: {x} + {y} = {x + y}")
-    </textarea>
-    
-    <button id="run-btn" py-click="run_python">Запустить код</button>
+<header>
+    <h2 style="margin:0;">🐍 Python Helper IDE</h2>
+</header>
 
-    <h3>Вывод:</h3>
-    <div id="output"></div>
+<div class="main-container">
+    <div class="sidebar cheat-sheet">
+        <p style="font-size: 12px; color: #aaa;">Кликни на блок, чтобы скопировать код в буфер обмена</p>
+        
+        <h3>Вывод и переменные</h3>
+        <pre onclick="copyCode(this)">print("Привет!")
+name = "Алекс"
+age = 20</pre>
+
+        <h3>Условия (Если)</h3>
+        <pre onclick="copyCode(this)">if age >= 18:
+    print("Доступ разрешен")
+else:
+    print("Маловат еще")</pre>
+
+        <h3>Цикл For (Повторение)</h3>
+        <pre onclick="copyCode(this)">for i in range(5):
+    print(f"Повтор №{i}")</pre>
+
+        <h3>Списки (Массивы)</h3>
+        <pre onclick="copyCode(this)">fruits = ["яблоко", "банан"]
+fruits.append("груша")
+print(fruits[0])</pre>
+
+        <h3>Функции</h3>
+        <pre onclick="copyCode(this)">def say_hello(text):
+    return f"Вы написали: {text}"
+
+print(say_hello("Тест"))</pre>
+
+        <h3>Классы (Объекты)</h3>
+        <pre onclick="copyCode(this)">class Dog:
+    def __init__(self, name):
+        self.name = name
+    
+    def bark(self):
+        return f"{self.name} говорит Гав!"
+
+my_dog = Dog("Шарик")
+print(my_dog.bark())</pre>
+    </div>
+
+    <div class="editor-section">
+        <textarea id="code-input" placeholder="Вставь код из шпаргалки или напиши свой...">
+# Напиши код здесь
+print("Консоль готова к работе!")
+        </textarea>
+        
+        <button id="run-btn" py-click="run_python">ЗАПУСТИТЬ КОД</button>
+
+        <div id="output">Здесь появится результат...</div>
+    </div>
 </div>
+
+<script>
+    function copyCode(element) {
+        const text = element.innerText.replace("нажми, чтобы скопировать", "").trim();
+        navigator.clipboard.writeText(text);
+        alert("Код скопирован! Теперь вставь его в окно редактора.");
+    }
+</script>
 
 <script type="py">
     import sys
     from js import document
 
     def run_python(event):
-        # Очищаем старый вывод
         out_div = document.getElementById("output")
         out_div.innerText = ""
-        
-        # Получаем код из текстового поля
         user_code = document.getElementById("code-input").value
         
-        # Перенаправляем print в наш div
         class OutputWriter:
             def write(self, text):
                 out_div.innerText += text
@@ -90,7 +116,6 @@ print(f"Результат: {x} + {y} = {x + y}")
         sys.stdout = OutputWriter()
         
         try:
-            # Магия запуска кода
             exec(user_code)
         except Exception as e:
             out_div.innerText += f"\nОШИБКА: {e}"
