@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Python Dev Academy</title>
+    <title>Python Dev Academy Pro</title>
     
     <link rel="stylesheet" href="https://pyscript.net/releases/2024.1.1/core.css">
     <script type="module" src="https://pyscript.net/releases/2024.1.1/core.js"></script>
@@ -14,64 +14,53 @@
 
     <style>
         * { box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #0d1117; color: #c9d1d9; margin: 0; display: flex; flex-direction: column; height: 100vh; }
+        body { font-family: 'Segoe UI', sans-serif; background: #0d1117; color: #c9d1d9; margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
         
-        /* 🛑 ПОЛНОЕ УДАЛЕНИЕ СТАНДАРТНОГО ТЕРМИНАЛА PYSCRIPT 🛑 */
-        py-terminal, 
-        .py-terminal, 
-        #py-terminal,
-        py-config, 
-        .py-overlay, 
-        py-splashscreen,
-        div[id^="pyscript"] { 
+        /* 🛑 СКРЫТИЕ СИСТЕМНОГО ТЕРМИНАЛА PYSCRIPT 🛑 */
+        py-terminal, .py-terminal, #py-terminal, py-config, .py-overlay, py-splashscreen, 
+        section[class*="pyscript"], div[class*="pyscript"], .pyscript-terminal { 
             display: none !important; 
-            opacity: 0 !important;
-            visibility: hidden !important;
-            height: 0 !important;
-            width: 0 !important;
-            position: absolute !important;
+            visibility: hidden !important; 
+            opacity: 0 !important; 
+            height: 0 !important; 
+            width: 0 !important; 
+            position: absolute !important; 
+            z-index: -1000 !important;
         }
 
         header { background: #161b22; padding: 15px 25px; border-bottom: 2px solid #238636; display: flex; justify-content: space-between; align-items: center; }
-        
         .main-container { display: flex; flex: 1; overflow: hidden; }
 
-        /* Левая панель */
-        .sidebar { width: 420px; background: #0d1117; border-right: 1px solid #30363d; overflow-y: auto; padding: 20px; }
-        .sidebar::-webkit-scrollbar { width: 6px; }
-        .sidebar::-webkit-scrollbar-thumb { background: #30363d; border-radius: 10px; }
-
-        .nav-card { background: #161b22; border: 1px solid #30363d; border-radius: 12px; padding: 15px; margin-bottom: 12px; transition: 0.2s; }
-        .nav-card:hover { border-color: #238636; }
-        
+        /* Sidebar */
+        .sidebar { width: 380px; background: #0d1117; border-right: 1px solid #30363d; overflow-y: auto; padding: 20px; }
+        .nav-card { background: #161b22; border: 1px solid #30363d; border-radius: 12px; padding: 15px; margin-bottom: 12px; }
         .nav-title { font-weight: 600; color: #58a6ff; display: flex; align-items: center; gap: 8px; font-size: 15px; }
-        .nav-keywords { display: block; font-size: 11px; color: #8b949e; margin: 4px 0 10px 28px; font-family: monospace; }
+        .nav-keywords { display: block; font-size: 11px; color: #8b949e; margin: 4px 0 10px 28px; font-family: 'Consolas', monospace; }
 
         .btn-group { display: flex; gap: 8px; }
         .btn-nav { border: none; border-radius: 6px; cursor: pointer; font-weight: bold; height: 34px; transition: 0.2s; }
         .btn-help { width: 36px; background: #30363d; color: #c9d1d9; font-size: 18px; }
         .btn-help:hover { background: #58a6ff; color: white; }
-        .btn-code { flex: 1; background: #238636; color: white; font-size: 12px; text-transform: uppercase; }
+        .btn-code { flex: 1; background: #238636; color: white; font-size: 11px; text-transform: uppercase; }
         .btn-code:hover { background: #2ea043; }
 
-        /* Редактор */
+        /* Editor */
         .editor-section { flex: 1; display: flex; flex-direction: column; padding: 20px; }
-        .CodeMirror { flex: 1; border-radius: 12px; font-size: 16px; border: 1px solid #30363d !important; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .CodeMirror { flex: 1; border-radius: 12px; font-size: 16px; border: 1px solid #30363d !important; }
         
         .action-bar { display: flex; gap: 10px; margin-top: 15px; }
         #run-btn { flex: 3; background: #238636; color: white; border: none; padding: 18px; border-radius: 8px; cursor: pointer; font-size: 18px; font-weight: bold; }
         .btn-sec { flex: 1; background: #21262d; color: #c9d1d9; border: 1px solid #30363d; border-radius: 8px; cursor: pointer; }
 
-        #output { height: 200px; background: #010409; color: #39d353; padding: 15px; font-family: 'Fira Code', monospace; border-radius: 12px; border: 1px solid #30363d; margin-top: 15px; overflow-y: auto; white-space: pre-wrap; font-size: 14px; }
+        #output { height: 180px; background: #010409; color: #39d353; padding: 15px; font-family: 'Fira Code', monospace; border-radius: 12px; border: 1px solid #30363d; margin-top: 15px; overflow-y: auto; white-space: pre-wrap; }
 
-        /* Модалка */
-        #modal { display: none; position: fixed; z-index: 999; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(6px); }
-        .modal-box { background: #161b22; margin: 5% auto; padding: 35px; width: 70%; max-width: 800px; border-radius: 16px; border-left: 6px solid #58a6ff; position: relative; box-shadow: 0 0 40px rgba(0,0,0,0.6); }
-        .close { position: absolute; right: 20px; top: 15px; font-size: 30px; cursor: pointer; color: #8b949e; }
-        
-        .m-section { margin-bottom: 20px; }
+        /* Modal */
+        #modal { display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(6px); }
+        .modal-box { background: #161b22; margin: 8% auto; padding: 30px; width: 65%; max-width: 750px; border-radius: 16px; border-left: 6px solid #58a6ff; position: relative; }
+        .close { position: absolute; right: 20px; top: 15px; font-size: 28px; cursor: pointer; color: #8b949e; }
+        .m-section { margin-bottom: 15px; }
         .m-section b { color: #58a6ff; }
-        .warning { background: #332b00; border-radius: 6px; padding: 10px; margin-top: 10px; color: #ffd33d; font-size: 14px; }
+        .warning { background: #332b00; border-radius: 6px; padding: 10px; margin-top: 10px; color: #ffd33d; font-size: 14px; border-left: 3px solid #ffd33d; }
     </style>
 </head>
 <body>
@@ -79,183 +68,133 @@
 <div id="modal">
     <div class="modal-box">
         <span class="close" onclick="closeModal()">&times;</span>
-        <h2 id="m-title" style="margin-top:0; color:#58a6ff; font-size: 24px;"></h2>
-        <div id="m-body" style="font-size: 16px; line-height: 1.7; color: #c9d1d9;"></div>
+        <h2 id="m-title" style="margin-top:0; color:#58a6ff;"></h2>
+        <div id="m-body" style="font-size: 16px; line-height: 1.6;"></div>
     </div>
 </div>
 
 <header>
-    <h2 style="margin:0; font-size: 20px;">🐍 Python Academy Pro</h2>
-    <div id="status" style="font-size: 12px; color: #8b949e;">Система готова к кодингу</div>
+    <h2 style="margin:0; font-size: 18px;">🐍 Python Academy Pro</h2>
+    <div style="font-size: 12px; color: #8b949e;">Терминал PyScript скрыт</div>
 </header>
 
 <div class="main-container">
     <div class="sidebar">
-        
         <div class="nav-card">
-            <div class="nav-title"><span>📣</span> Вывод текста</div>
-            <span class="nav-keywords">print(), f"", "\n"</span>
+            <div class="nav-title"><span>📣</span> Вывод данных</div>
+            <span class="nav-keywords">print(), f-strings, \n</span>
             <div class="btn-group">
                 <button class="btn-nav btn-help" onclick="openHelp('print')">?</button>
-                <button class="btn-nav btn-code" onclick="addCode('print(\'Результат:\', 5 + 5)')">Пример</button>
+                <button class="btn-nav btn-code" onclick="addCode('print(f\"Результат: {10 * 5}\")')">Пример</button>
             </div>
         </div>
 
         <div class="nav-card">
             <div class="nav-title"><span>📦</span> Переменные</div>
-            <span class="nav-keywords">name = value, int, str, float</span>
+            <span class="nav-keywords">x = 5, str, int, float</span>
             <div class="btn-group">
                 <button class="btn-nav btn-help" onclick="openHelp('vars')">?</button>
-                <button class="btn-nav btn-code" onclick="addCode('player = \"Алекс\"\nhp = 100\nprint(f\"{player}: {hp} HP\")')">Пример</button>
+                <button class="btn-nav btn-code" onclick="addCode('name = \"Алекс\"\nhp = 100\nprint(name, hp)')">Пример</button>
             </div>
         </div>
 
         <div class="nav-card">
             <div class="nav-title"><span>🛤</span> Условия</div>
-            <span class="nav-keywords">if, elif, else, ==, !=, >=</span>
+            <span class="nav-keywords">if, elif, else, ==, and</span>
             <div class="btn-group">
                 <button class="btn-nav btn-help" onclick="openHelp('if')">?</button>
-                <button class="btn-nav btn-code" onclick="addCode('score = 75\nif score >= 50:\n    print(\"Зачет!\")\nelse:\n    print(\"Пересдача\")')">Пример</button>
-            </div>
-        </div>
-
-        <div class="nav-card">
-            <div class="nav-title"><span>📚</span> Списки</div>
-            <span class="nav-keywords">[], .append(), len(), [0]</span>
-            <div class="btn-group">
-                <button class="btn-nav btn-help" onclick="openHelp('lists')">?</button>
-                <button class="btn-nav btn-code" onclick="addCode('bag = [\"Меч\", \"Щит\"]\nbag.append(\"Зелье\")\nprint(bag)')">Пример</button>
+                <button class="btn-nav btn-code" onclick="addCode('age = 18\nif age >= 18:\n    print(\"Доступ разрешен\")')">Пример</button>
             </div>
         </div>
 
         <div class="nav-card">
             <div class="nav-title"><span>🔄</span> Циклы</div>
-            <span class="nav-keywords">for i in range(), while</span>
+            <span class="nav-keywords">for, while, range()</span>
             <div class="btn-group">
                 <button class="btn-nav btn-help" onclick="openHelp('loops')">?</button>
-                <button class="btn-nav btn-code" onclick="addCode('for i in range(3):\n    print(f\"Шаг №{i}\")')">Пример</button>
+                <button class="btn-nav btn-code" onclick="addCode('for i in range(5):\n    print(\"Привет!\", i)')">Пример</button>
             </div>
         </div>
 
         <div class="nav-card">
-            <div class="nav-title"><span>🔢</span> Математика</div>
-            <span class="nav-keywords">import math, sqrt(), **, %</span>
+            <div class="nav-title"><span>📚</span> Списки</div>
+            <span class="nav-keywords">[], .append(), len()</span>
             <div class="btn-group">
-                <button class="btn-nav btn-help" onclick="openHelp('math')">?</button>
-                <button class="btn-nav btn-code" onclick="addCode('import math\nprint(math.sqrt(16))\nprint(10 % 3) # Остаток')">Пример</button>
+                <button class="btn-nav btn-help" onclick="openHelp('lists')">?</button>
+                <button class="btn-nav btn-code" onclick="addCode('items = [\"Меч\", \"Щит\"]\nitems.append(\"Шлем\")\nprint(items)')">Пример</button>
             </div>
         </div>
 
-        <div class="nav-card">
-            <div class="nav-title"><span>🛡</span> Ошибки</div>
-            <span class="nav-keywords">try, except, ZeroDivisionError</span>
-            <div class="btn-group">
-                <button class="btn-nav btn-help" onclick="openHelp('errors')">?</button>
-                <button class="btn-nav btn-code" onclick="addCode('try:\n    print(10 / 0)\nexcept:\n    print(\"Ошибка деления!\")')">Пример</button>
-            </div>
-        </div>
-
-        <button class="btn-sec" style="width:100%; margin-top:20px; color:#f85149; border-color:#f85149;" onclick="clearAll()">🗑 Очистить редактор</button>
+        <button class="btn-sec" style="width:100%; margin-top:20px; color:#f85149;" onclick="clearAll()">🗑 Очистить редактор</button>
     </div>
 
     <div class="editor-section">
         <textarea id="code-input"></textarea>
         <div class="action-bar">
-            <button id="run-btn" py-click="run">▶ ЗАПУСТИТЬ ПРОГРАММУ</button>
+            <button id="run-btn" py-click="run">▶ ЗАПУСТИТЬ КОД</button>
             <button class="btn-sec" onclick="download()">СКАЧАТЬ .PY</button>
         </div>
-        <div id="output">Консоль готова к выводу...</div>
+        <div id="output">Консоль готова...</div>
     </div>
 </div>
 
 <script>
-    // Настройка CodeMirror
     const editor = CodeMirror.fromTextArea(document.getElementById("code-input"), {
-        mode: "python",
-        theme: "dracula",
-        lineNumbers: true,
-        indentUnit: 4,
-        smartIndent: true,
-        matchBrackets: true,
-        autoCloseBrackets: true
+        mode: "python", theme: "dracula", lineNumbers: true, indentUnit: 4, autoCloseBrackets: true
     });
 
-    const explanations = {
+    const helpData = {
         print: {
-            title: "📣 Функция Print (Вывод)",
-            body: `<div class="m-section"><b>Что делает:</b> Выводит любую информацию в консоль (зеленое окно снизу).</div>
-                   <div class="m-section"><b>Как писать:</b> <code>print("Текст")</code> или <code>print(5 + 5)</code>.</div>
-                   <div class="warning">💡 Если хочешь склеить текст и переменную, используй f-строку: <code>print(f"Привет, {name}")</code></div>`
+            title: "📣 Функция Print",
+            body: `<div class="m-section"><b>Что делает:</b> Показывает текст или числа в консоли.</div>
+                   <div class="m-section"><b>Как писать:</b> <code>print("Текст")</code>. Используй <b>f-строки</b> для вставки переменных: <code>f"Привет, {name}"</code>.</div>
+                   <div class="warning">💡 Не забывай кавычки для текста! Без них Python будет искать переменную с таким именем.</div>`
         },
         vars: {
-            title: "📦 Переменные (Хранилище)",
-            body: `<div class="m-section"><b>Что делает:</b> Позволяет компьютеру запомнить данные под коротким именем.</div>
-                   <div class="m-section"><b>Типы:</b> <code>str</code> (текст), <code>int</code> (целое число), <code>float</code> (дробь).</div>
-                   <div class="warning">⚠️ Имя не может начинаться с цифры! Пиши <code>player_1</code>, а не <code>1player</code>.</div>`
+            title: "📦 Переменные",
+            body: `<div class="m-section"><b>Что делает:</b> Хранит данные в памяти под выбранным именем.</div>
+                   <div class="m-section"><b>Пример:</b> <code>level = 1</code>. Теперь везде вместо "1" можно писать "level".</div>
+                   <div class="warning">⚠️ Имя переменной не может начинаться с цифры и содержать пробелы.</div>`
         },
         if: {
-            title: "🛤 Условия (Выбор пути)",
-            body: `<div class="m-section"><b>Что делает:</b> Проверяет условие. Если оно верно — выполняет один код, если нет — другой.</div>
-                   <div class="m-section"><b>Символы:</b> <code>==</code> (равно), <code>!=</code> (не равно), <code>></code> (больше).</div>
-                   <div class="warning">🛑 В конце строки с <b>if</b> всегда ставь двоеточие <b>:</b>, а следующую строку пиши с отступом!</div>`
-        },
-        lists: {
-            title: "📚 Списки (Массивы)",
-            body: `<div class="m-section"><b>Что делает:</b> Хранит много предметов в одной переменной. Представь это как шкаф с полками.</div>
-                   <div class="m-section"><b>Индексы:</b> Счет идет с <b>0</b>. Первый предмет в списке <code>items[0]</code>.</div>
-                   <div class="warning">🛠 Чтобы добавить новый предмет в конец, используй <code>.append()</code></div>`
+            title: "🛤 Условия",
+            body: `<div class="m-section"><b>Что делает:</b> Выполняет код только если условие верно.</div>
+                   <div class="m-section"><b>Важно:</b> После <code>if</code> ставится двоеточие <b>:</b>, а следующая строка идет с <b>отступом</b>.</div>
+                   <div class="warning">🛑 Отступы в Python — это не просто красота, это часть логики!</div>`
         },
         loops: {
-            title: "🔄 Циклы (Повторения)",
-            body: `<div class="m-section"><b>Что делает:</b> Выполняет один и тот же код много раз, пока ты не скажешь "стоп".</div>
-                   <div class="m-section"><b>Range:</b> <code>range(5)</code> создаст 5 повторений (от 0 до 4).</div>
-                   <div class="warning">⚙️ Циклы идеальны для обработки списков или создания игровых таймеров.</div>`
+            title: "🔄 Циклы",
+            body: `<div class="m-section"><b>Что делает:</b> Повторяет код многократно. <code>range(5)</code> выполнит цикл 5 раз.</div>
+                   <div class="m-section"><b>Зачем:</b> Чтобы не писать одну и ту же команду 100 раз подряд.</div>`
         },
-        math: {
-            title: "🔢 Математика и Модули",
-            body: `<div class="m-section"><b>Что делает:</b> Python умеет считать всё. Но для сложных штук нужен модуль <b>math</b>.</div>
-                   <div class="m-section"><b>Операторы:</b> <code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>, <code>**</code> (степень), <code>%</code> (остаток).</div>
-                   <div class="warning">📐 Корень числа: <code>math.sqrt(16)</code> выдаст 4.0.</div>`
-        },
-        errors: {
-            title: "🛡 Обработка ошибок (Try/Except)",
-            body: `<div class="m-section"><b>Что делает:</b> Если в коде случится ошибка (например, деление на ноль), программа не "вылетит", а выполнит запасной план.</div>
-                   <div class="warning">🚑 Блок <b>try</b> — пробуем код. Блок <b>except</b> — сработает, если случилась беда.</div>`
+        lists: {
+            title: "📚 Списки",
+            body: `<div class="m-section"><b>Что делает:</b> Группирует много значений в одну переменную.</div>
+                   <div class="m-section"><b>Помни:</b> Первый элемент списка всегда имеет индекс <b>0</b>.</div>`
         }
     };
 
     function openHelp(k) {
-        document.getElementById('m-title').innerHTML = explanations[k].title;
-        document.getElementById('m-body').innerHTML = explanations[k].body;
+        document.getElementById('m-title').innerHTML = helpData[k].title;
+        document.getElementById('m-body').innerHTML = helpData[k].body;
         document.getElementById('modal').style.display = "block";
     }
-
     function closeModal() { document.getElementById('modal').style.display = "none"; }
-    
     function addCode(c) {
-        const cur = editor.getValue();
-        editor.setValue(cur + (cur ? "\n\n" : "") + c);
+        const v = editor.getValue();
+        editor.setValue(v + (v ? "\n\n" : "") + c);
     }
-
-    function clearAll() { if(confirm("Очистить редактор?")) editor.setValue(""); }
-
+    function clearAll() { if(confirm("Очистить?")) editor.setValue(""); }
     function download() {
-        const blob = new Blob([editor.getValue()], { type: 'text/plain' });
-        const a = document.createElement('a');
-        a.download = "my_script.py";
-        a.href = URL.createObjectURL(blob);
-        a.click();
+        const b = new Blob([editor.getValue()], {type:'text/plain'});
+        const a = document.createElement('a'); a.download="script.py"; a.href=URL.createObjectURL(b); a.click();
     }
 
-    // Автосохранение
-    editor.on("change", () => {
-        localStorage.setItem('py_studio_v3', editor.getValue());
-    });
-
+    editor.on("change", () => localStorage.setItem('py_code_final', editor.getValue()));
     window.onload = () => {
-        const saved = localStorage.getItem('py_studio_v3');
-        if(saved) editor.setValue(saved);
-    };
+        const s = localStorage.getItem('py_code_final');
+        if(s) editor.setValue(s);
+    }
 </script>
 
 <script type="py">
@@ -264,15 +203,17 @@
     
     def run(event):
         out = document.getElementById("output")
-        out.innerText = ">>> Программа запущена...\n"
-        code = editor.getValue()
+        out.innerText = ">>> Выполнение...\n"
         
         class Writer:
             def write(self, t): out.innerText += t
             def flush(self): pass
+            
         sys.stdout = Writer()
-        try: exec(code)
-        except Exception as e: out.innerText += f"\n[!] ОШИБКА: {e}"
+        try:
+            exec(editor.getValue())
+        except Exception as e:
+            out.innerText += f"\n[Ошибка]: {e}"
 </script>
 </body>
 </html>
