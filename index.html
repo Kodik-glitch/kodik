@@ -35,24 +35,15 @@
 
         /* Загрузочный экран */
         #loader {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--bg-dark);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-dark); display: flex; flex-direction: column;
+            justify-content: center; align-items: center; z-index: 9999;
         }
 
         header { 
-            background: var(--bg-secondary); 
-            padding: 12px 25px; 
-            border-bottom: 2px solid var(--accent-blue); 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            z-index: 10;
+            background: var(--bg-secondary); padding: 12px 25px; 
+            border-bottom: 2px solid var(--accent-blue); display: flex; 
+            justify-content: space-between; align-items: center; z-index: 10;
             box-shadow: 0 4px 12px rgba(0,0,0,0.5);
         }
 
@@ -60,119 +51,44 @@
 
         /* Сайдбар */
         .sidebar { 
-            width: 320px; 
-            background: var(--bg-dark); 
-            border-right: 1px solid var(--border-color); 
-            overflow-y: auto; 
-            padding: 15px; 
-            display: flex; 
-            flex-direction: column; 
-            gap: 12px; 
+            width: 350px; background: var(--bg-dark); border-right: 1px solid var(--border-color); 
+            overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 12px; 
         }
 
         .nav-card { 
-            background: var(--bg-secondary); 
-            border: 1px solid var(--border-color); 
-            border-radius: 10px; 
-            padding: 15px; 
+            background: var(--bg-secondary); border: 1px solid var(--border-color); 
+            border-radius: 10px; padding: 15px; display: flex; flex-direction: column; gap: 10px;
         }
-        
         .nav-card:hover { border-color: var(--text-link); }
+        .nav-header { display: flex; align-items: center; font-weight: 600; font-size: 15px; }
+        .nav-header span { margin-right: 12px; font-size: 20px; width: 24px; text-align: center; }
 
         /* Кнопки */
-        .btn {
-            border: none;
-            border-radius: 6px;
-            padding: 10px 15px;
-            font-weight: 600;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            font-size: 14px;
-        }
-
-        .btn-run { background: var(--accent-blue); color: white; flex: 3; font-size: 16px; }
+        .btn { border: none; border-radius: 6px; padding: 10px 15px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-size: 14px; }
+        .btn-run { background: var(--accent-blue); color: white; flex: 3; font-size: 16px; padding: 12px; }
         .btn-run:hover { background: #0366d6; transform: translateY(-1px); }
-        
         .btn-outline { background: #21262d; border: 1px solid var(--border-color); color: var(--text-link); width: 100%; }
         .btn-outline:hover { background: #30363d; }
-
-        .btn-share { background: #8957e5; color: white; font-size: 12px; }
+        .btn-share { background: #8957e5; color: white; font-size: 12px; margin-left: 15px; }
 
         /* Редактор */
-        .editor-section { flex: 1; display: flex; flex-direction: column; padding: 15px; gap: 15px; background: #0d1117; }
-        
+        .editor-section { flex: 1; display: flex; flex-direction: column; padding: 15px; gap: 15px; }
         #code-input { 
-            flex: 1; 
-            background: #010409; 
-            color: #79c0ff; 
-            font-family: 'Fira Code', 'Cascadia Code', monospace; 
-            padding: 20px; 
-            border: 1px solid var(--border-color); 
-            border-radius: 12px; 
-            font-size: 16px; 
-            resize: none; 
-            outline: none;
-            line-height: 1.5;
+            flex: 1; background: #010409; color: #79c0ff; font-family: 'Fira Code', monospace; 
+            padding: 20px; border: 1px solid var(--border-color); border-radius: 12px; font-size: 16px; 
+            resize: none; outline: none; line-height: 1.5;
         }
-
         #output { 
-            height: 180px; 
-            background: #010409; 
-            color: #d7dae0; 
-            padding: 15px; 
-            font-family: 'Consolas', monospace; 
-            border-radius: 12px; 
-            border: 1px solid var(--border-color); 
-            overflow-y: auto; 
-            white-space: pre-wrap; 
-            border-left: 5px solid var(--accent-blue);
+            height: 180px; background: #010409; color: #d7dae0; padding: 15px; 
+            font-family: 'Consolas', monospace; border-radius: 12px; border: 1px solid var(--border-color); 
+            overflow-y: auto; white-space: pre-wrap; border-left: 5px solid var(--accent-blue);
         }
 
-        /* Модальное окно */
-        #modal { 
-            display: none; 
-            position: fixed; 
-            z-index: 1000; 
-            left: 0; top: 0; width: 100%; height: 100%; 
-            background: rgba(0,0,0,0.85); 
-            backdrop-filter: blur(5px); 
-        }
-
-        .modal-box { 
-            background: var(--bg-secondary); 
-            margin: 5vh auto; 
-            padding: 30px; 
-            width: 90%; 
-            max-width: 650px; 
-            border-radius: 20px; 
-            border: 1px solid var(--border-color); 
-            position: relative;
-            max-height: 85vh;
-            overflow-y: auto;
-        }
-
-        .quiz-container {
-            background: #0d1117;
-            border: 1px solid var(--success);
-            border-radius: 12px;
-            padding: 20px;
-            margin-top: 20px;
-        }
-
-        .example-block {
-            background: #010409;
-            padding: 15px;
-            border-radius: 8px;
-            color: #ff7b72;
-            font-family: monospace;
-            margin-top: 10px;
-            display: block;
-            border: 1px dashed var(--border-color);
-        }
-
+        /* Модалка */
+        #modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); }
+        .modal-box { background: var(--bg-secondary); margin: 5vh auto; padding: 30px; width: 90%; max-width: 650px; border-radius: 20px; border: 1px solid var(--border-color); position: relative; max-height: 85vh; overflow-y: auto; }
+        .quiz-container { background: #0d1117; border: 1px solid var(--success); border-radius: 12px; padding: 20px; margin-top: 20px; }
+        .example-block { background: #010409; padding: 15px; border-radius: 8px; color: #ff7b72; font-family: monospace; margin-top: 10px; display: block; border: 1px dashed var(--border-color); white-space: pre; }
         .close-btn { position: absolute; right: 20px; top: 15px; cursor: pointer; font-size: 28px; color: var(--border-color); }
         .close-btn:hover { color: var(--error); }
     </style>
@@ -180,30 +96,27 @@
 <body>
 
 <div id="loader">
-    <h2 style="color: var(--text-link); margin-bottom: 5px;">🐍 Python Academy</h2>
-    <p style="color: #8b949e; font-size: 14px;">Инициализация PyScript Engine...</p>
+    <h2 style="color: var(--text-link);">🐍 Python Academy Studio</h2>
+    <p style="color: #8b949e;">Загрузка интерактивной среды...</p>
 </div>
 
 <header>
-    <div style="display: flex; align-items: center; gap: 15px;">
-        <h2 style="margin:0; font-size: 18px; letter-spacing: 1px;">🐍 PY ACADEMY <span style="color: var(--text-link);">STUDIO</span></h2>
+    <div style="display: flex; align-items: center;">
+        <h2 style="margin:0; font-size: 18px; letter-spacing: 1px;">🐍 PYTHON <span style="color: var(--text-link);">ACADEMY</span></h2>
         <button class="btn btn-share" onclick="shareCode()">🔗 Поделиться кодом</button>
     </div>
-    <div id="status-tag" style="font-size: 12px; color: var(--success); background: rgba(35, 134, 54, 0.1); padding: 4px 12px; border-radius: 20px; border: 1px solid var(--success);">Система готова</div>
+    <div id="status-tag" style="font-size: 12px; color: var(--success); border: 1px solid var(--success); padding: 4px 12px; border-radius: 20px;">Система готова</div>
 </header>
 
 <div class="main-container">
-    <div class="sidebar" id="lesson-sidebar">
-        </div>
+    <div class="sidebar" id="sidebar-content"></div>
 
     <div class="editor-section">
         <textarea id="code-input" spellcheck="false" placeholder="Напиши свой Python код здесь..."></textarea>
-        
         <div style="display: flex; gap: 12px;">
             <button class="btn btn-run" py-click="run">ЗАПУСТИТЬ КОД ▶</button>
             <button class="btn btn-outline" style="flex:1; color: var(--error);" onclick="clearEditor()">Очистить</button>
         </div>
-
         <div id="output">Результат выполнения появится здесь...</div>
     </div>
 </div>
@@ -215,142 +128,106 @@
         <p id="m-body" style="line-height: 1.6;"></p>
         
         <div class="quiz-container">
-            <h4 style="margin: 0 0 10px 0; color: var(--success); display: flex; align-items: center; gap: 8px;">🎯 Практическое задание:</h4>
+            <h4 style="margin: 0 0 10px 0; color: var(--success);">🎯 Задание:</h4>
             <p id="m-quiz-text" style="margin-bottom: 15px; font-style: italic;"></p>
             <button class="btn btn-run" style="font-size: 14px; padding: 8px 20px;" id="btn-take-quiz">Решать в редакторе</button>
         </div>
 
         <div style="margin-top: 25px;">
-            <p style="font-weight: 600; font-size: 14px; margin-bottom: 8px;">Пример синтаксиса:</p>
+            <p style="font-weight: 600; font-size: 14px;">Пример синтаксиса:</p>
             <code class="example-block" id="m-code"></code>
         </div>
     </div>
 </div>
 
 <script>
-    const content = {
-        print: {
-            title: "Вывод данных",
-            body: "Функция print() — это основной способ вывести текст или числа на экран. Текст должен быть в кавычках.",
-            quiz: "Выведи в консоль фразу: Я учу Python",
-            code: 'print("Я учу Python")'
-        },
-        vars: {
-            title: "Переменные",
-            body: "Переменные позволяют хранить данные. Мы просто придумываем имя и через знак '=' даем ему значение.",
-            quiz: "Создай переменную name со своим именем и выведи её на экран.",
-            code: 'name = "Алекс"\nprint(name)'
-        },
-        math: {
-            title: "Математика",
-            body: "Python отлично считает. Используй +, -, *, /. Для степени используй **.",
-            quiz: "Вычисли 2 в 10-й степени и выведи результат.",
-            code: 'print(2 ** 10)'
-        }
-    };
+    const lessons = [
+        { id: 'print', icon: '📣', title: 'Вывод текста', color: '#ffca28', desc: 'Функция print() выводит данные в консоль. Текст пишется в кавычках.', quiz: 'Выведи фразу: Привет, Python!', code: 'print("Привет, Python!")' },
+        { id: 'vars', icon: '📦', title: 'Переменные', color: '#4fc3f7', desc: 'Переменные хранят данные. Имя = Значение.', quiz: 'Создай переменную score со значением 100 и выведи её.', code: 'score = 100\nprint(score)' },
+        { id: 'math', icon: '🧮', title: 'Математика', color: '#ff7043', desc: 'Используй +, -, *, /. Для степени - **, для остатка - %.', quiz: 'Вычисли 5 в 3-й степени и выведи результат.', code: 'print(5 ** 3)' },
+        { id: 'if', icon: '🛤', title: 'Условия (if)', color: '#ba68c8', desc: 'Проверяет условие. Важны двоеточие и отступ 4 пробела!', quiz: 'Если x > 10, выведи "Много". Иначе - "Мало".', code: 'x = 15\nif x > 10:\n    print("Много")\nelse:\n    print("Мало")' },
+        { id: 'lists', icon: '📚', title: 'Списки', color: '#81c784', desc: 'Наборы данных в [ ]. Индексы начинаются с нуля.', quiz: 'Создай список цветов и выведи первый элемент.', code: 'colors = ["красный", "синий"]\nprint(colors[0])' },
+        { id: 'dicts', icon: '📖', title: 'Словари', color: '#fff176', desc: 'Пары Ключ: Значение в { }.', quiz: 'Создай словарь игрока с ключом "hp" и выведи его.', code: 'player = {"hp": 100}\nprint(player["hp"])' },
+        { id: 'for', icon: '🔄', title: 'Цикл For', color: '#4db6ac', desc: 'Перебирает элементы. range(n) дает числа от 0 до n-1.', quiz: 'Выведи числа от 0 до 2 с помощью цикла for.', code: 'for i in range(3):\n    print(i)' },
+        { id: 'while', icon: '🔁', title: 'Цикл While', color: '#fb8c00', desc: 'Цикл работает, пока условие верно.', quiz: 'Пока x < 3, выводи x и прибавляй к нему 1.', code: 'x = 0\nwhile x < 3:\n    print(x)\n    x += 1' },
+        { id: 'funcs', icon: '⚙️', title: 'Функции', color: '#f06292', desc: 'def создает блок кода для повторного вызова.', quiz: 'Создай функцию hi(), которая пишет "Привет", и вызови её.', code: 'def hi():\n    print("Привет")\n\nhi()' },
+        { id: 'errors', icon: '⚠️', title: 'Ошибки', color: '#e57373', desc: 'try/except предотвращает вылет программы при ошибке.', quiz: 'Попробуй поделить на 0 и выведи "Ошибка" в блоке except.', code: 'try:\n    res = 1 / 0\nexcept:\n    print("Ошибка")' }
+    ];
 
-    // Генерация карточек в сайдбаре
-    const sidebar = document.getElementById('lesson-sidebar');
-    Object.keys(content).forEach(key => {
-        const item = content[key];
+    const sidebar = document.getElementById('sidebar-content');
+    lessons.forEach(l => {
         sidebar.innerHTML += `
             <div class="nav-card">
-                <div style="font-weight: 600; margin-bottom: 10px;">${item.title}</div>
-                <button class="btn btn-outline" onclick="openModal('${key}')">📚 Урок и Квиз</button>
+                <div class="nav-header"><span style="color:${l.color}">${l.icon}</span> ${l.title}</div>
+                <button class="btn btn-outline" onclick="openLesson('${l.id}')">📖 Урок и Задание</button>
             </div>
         `;
     });
 
-    function openModal(key) {
-        const data = content[key];
-        document.getElementById('m-title').innerText = data.title;
-        document.getElementById('m-body').innerText = data.body;
-        document.getElementById('m-quiz-text').innerText = data.quiz;
-        document.getElementById('m-code').innerText = data.code;
+    function openLesson(id) {
+        const l = lessons.find(x => x.id === id);
+        document.getElementById('m-title').innerText = l.title;
+        document.getElementById('m-body').innerText = l.desc;
+        document.getElementById('m-quiz-text').innerText = l.quiz;
+        document.getElementById('m-code').innerText = l.code;
         
         document.getElementById('btn-take-quiz').onclick = () => {
-            const editor = document.getElementById('code-input');
-            editor.value = `# Задание: ${data.quiz}\n\n`;
-            editor.focus();
+            document.getElementById('code-input').value = `# Задание: ${l.quiz}\n\n`;
             closeModal();
         };
-        
         document.getElementById('modal').style.display = 'block';
     }
 
     function closeModal() { document.getElementById('modal').style.display = 'none'; }
 
-    // Умный редактор: поддержка Tab
+    // Tab support
     document.getElementById('code-input').addEventListener('keydown', function(e) {
         if (e.key === 'Tab') {
             e.preventDefault();
             const start = this.selectionStart;
-            const end = this.selectionEnd;
-            this.value = this.value.substring(0, start) + "    " + this.value.substring(end);
+            this.value = this.value.substring(0, start) + "    " + this.value.substring(this.selectionEnd);
             this.selectionStart = this.selectionEnd = start + 4;
         }
     });
 
-    // Функция "Поделиться"
     function shareCode() {
-        const code = document.getElementById('code-input').value;
-        if(!code) return alert("Сначала напиши код!");
-        
-        const base64 = btoa(unescape(encodeURIComponent(code)));
-        const url = window.location.origin + window.location.pathname + '?code=' + base64;
-        
-        navigator.clipboard.writeText(url).then(() => {
-            alert("Ссылка скопирована! Любой, кто откроет её, увидит твой код в редакторе.");
-        });
+        const code = btoa(unescape(encodeURIComponent(document.getElementById('code-input').value)));
+        const url = window.location.origin + window.location.pathname + '?code=' + code;
+        navigator.clipboard.writeText(url);
+        alert("Ссылка скопирована! Отправь её другу.");
     }
 
-    // Загрузка кода и скрытие лоадера
     window.onload = () => {
-        const params = new URLSearchParams(window.location.search);
-        if (params.has('code')) {
-            try {
-                const decoded = decodeURIComponent(escape(atob(params.get('code'))));
-                document.getElementById('code-input').value = decoded;
-            } catch(e) { console.error("Ошибка декодирования кода"); }
-        }
-        
-        // Скрываем лоадер через небольшую паузу
+        const p = new URLSearchParams(window.location.search);
+        if (p.has('code')) document.getElementById('code-input').value = decodeURIComponent(escape(atob(p.get('code'))));
         setTimeout(() => {
             document.getElementById('loader').style.opacity = '0';
             setTimeout(() => document.getElementById('loader').style.display = 'none', 500);
-        }, 3500);
+        }, 3000);
     };
 
-    function clearEditor() { if(confirm("Удалить весь код в редакторе?")) document.getElementById('code-input').value = ""; }
+    function clearEditor() { if(confirm("Очистить редактор?")) document.getElementById('code-input').value = ""; }
 </script>
 
 <script type="py">
-    import sys
-    import io
+    import sys, io
     from js import document
 
     def run(event):
-        # Очищаем вывод и берем код
-        out_div = document.getElementById("output")
+        out = document.getElementById("output")
         code = document.getElementById("code-input").value
-        out_div.innerText = "Running..."
+        out.innerText = "Выполнение..."
         
-        # Перехватываем stdout (стандартный вывод)
-        output_buffer = io.StringIO()
-        sys.stdout = output_buffer
-        sys.stderr = output_buffer
+        buf = io.StringIO()
+        sys.stdout = buf
+        sys.stderr = buf
         
         try:
-            # Выполняем код пользователя
             exec(code)
-            result = output_buffer.getvalue()
-            out_div.innerText = result if result else "Код выполнен (без вывода в консоль)."
+            res = buf.getvalue()
+            out.innerText = res if res else "Код выполнен (без вывода)."
         except Exception as e:
-            out_div.innerText = f"❌ Ошибка в коде:\n{str(e)}"
-        finally:
-            # Возвращаем поток вывода в норму
-            sys.stdout = sys.__stdout__
-            sys.stderr = sys.__stderr__
+            out.innerText = f"❌ Ошибка:\n{str(e)}"
 </script>
 
 </body>
