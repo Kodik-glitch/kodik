@@ -2,267 +2,326 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Python Academy Studio Pro</title>
+    
     <link rel="stylesheet" href="https://pyscript.net/releases/2024.1.1/core.css">
     <script type="module" src="https://pyscript.net/releases/2024.1.1/core.js"></script>
 
     <style>
-        * { box-sizing: border-box; }
-        body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0d1117; color: #c9d1d9; margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+        :root {
+            --bg-dark: #0d1117;
+            --bg-secondary: #161b22;
+            --border-color: #30363d;
+            --accent-blue: #005cc5;
+            --text-main: #c9d1d9;
+            --text-link: #58a6ff;
+            --success: #238636;
+            --error: #f85149;
+        }
+
+        * { box-sizing: border-box; transition: all 0.2s ease; }
         
-        header { background: #161b22; padding: 15px 25px; border-bottom: 2px solid #005cc5; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.3); z-index: 10; }
+        body { 
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; 
+            background: var(--bg-dark); 
+            color: var(--text-main); 
+            margin: 0; 
+            display: flex; 
+            flex-direction: column; 
+            height: 100vh; 
+            overflow: hidden; 
+        }
+
+        /* Загрузочный экран */
+        #loader {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-dark);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        header { 
+            background: var(--bg-secondary); 
+            padding: 12px 25px; 
+            border-bottom: 2px solid var(--accent-blue); 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            z-index: 10;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+
         .main-container { display: flex; flex: 1; overflow: hidden; }
 
-        /* Левая панель */
-        .sidebar { width: 350px; background: #0d1117; border-right: 1px solid #30363d; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 14px; }
-        .sidebar::-webkit-scrollbar { width: 6px; }
-        .sidebar::-webkit-scrollbar-thumb { background: #30363d; border-radius: 10px; }
-
-        .nav-card { background: #161b22; border: 1px solid #30363d; border-radius: 12px; padding: 15px; transition: all 0.2s ease; }
-        .nav-card:hover { border-color: #005cc5; background: #1c2128; }
-        
-        .nav-header { display: flex; align-items: center; margin-bottom: 12px; font-size: 16px; font-weight: 600; }
-        .nav-header span { margin-right: 12px; font-size: 20px; width: 24px; text-align: center; }
-
-        .btn-info { 
-            width: 100%; 
-            background: #21262d; 
-            color: #58a6ff; 
-            border: 1px solid #30363d; 
-            border-radius: 8px; 
-            cursor: pointer; 
-            font-size: 13px; 
-            font-weight: 600; 
-            padding: 10px; 
-            transition: all 0.3s ease; 
+        /* Сайдбар */
+        .sidebar { 
+            width: 320px; 
+            background: var(--bg-dark); 
+            border-right: 1px solid var(--border-color); 
+            overflow-y: auto; 
+            padding: 15px; 
             display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            gap: 8px; 
+            flex-direction: column; 
+            gap: 12px; 
         }
-        .btn-info:hover { 
-            background: #005cc5; 
-            color: white; 
-            border-color: #58a6ff; 
-            box-shadow: 0 0 12px rgba(0, 92, 197, 0.4); 
-            transform: translateY(-2px); 
+
+        .nav-card { 
+            background: var(--bg-secondary); 
+            border: 1px solid var(--border-color); 
+            border-radius: 10px; 
+            padding: 15px; 
         }
+        
+        .nav-card:hover { border-color: var(--text-link); }
+
+        /* Кнопки */
+        .btn {
+            border: none;
+            border-radius: 6px;
+            padding: 10px 15px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .btn-run { background: var(--accent-blue); color: white; flex: 3; font-size: 16px; }
+        .btn-run:hover { background: #0366d6; transform: translateY(-1px); }
+        
+        .btn-outline { background: #21262d; border: 1px solid var(--border-color); color: var(--text-link); width: 100%; }
+        .btn-outline:hover { background: #30363d; }
+
+        .btn-share { background: #8957e5; color: white; font-size: 12px; }
 
         /* Редактор */
-        .editor-section { flex: 1; display: flex; flex-direction: column; padding: 20px; background: #0d1117; }
-        #code-input { flex: 1; background: #010409; color: #d7dae0; font-family: 'Fira Code', 'Consolas', monospace; padding: 20px; border: 1px solid #30363d; border-radius: 12px; font-size: 16px; resize: none; outline: none; line-height: 1.6; }
+        .editor-section { flex: 1; display: flex; flex-direction: column; padding: 15px; gap: 15px; background: #0d1117; }
         
-        .action-bar { display: flex; gap: 12px; margin-top: 15px; }
-        
-        #run-btn { flex: 3; background: #005cc5; color: white; border: none; padding: 15px; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: bold; transition: 0.2s; }
-        #run-btn:hover { background: #0366d6; transform: scale(1.01); }
-        
-        .btn-secondary { flex: 1; background: #21262d; color: #c9d1d9; border: 1px solid #30363d; border-radius: 8px; cursor: pointer; transition: 0.2s; }
-        .btn-secondary:hover { background: #30363d; color: #58a6ff; }
+        #code-input { 
+            flex: 1; 
+            background: #010409; 
+            color: #79c0ff; 
+            font-family: 'Fira Code', 'Cascadia Code', monospace; 
+            padding: 20px; 
+            border: 1px solid var(--border-color); 
+            border-radius: 12px; 
+            font-size: 16px; 
+            resize: none; 
+            outline: none;
+            line-height: 1.5;
+        }
 
         #output { 
             height: 180px; 
             background: #010409; 
-            color: #58a6ff; 
+            color: #d7dae0; 
             padding: 15px; 
-            font-family: monospace; 
+            font-family: 'Consolas', monospace; 
             border-radius: 12px; 
-            border: 1px solid #30363d; 
-            margin-top: 15px; 
+            border: 1px solid var(--border-color); 
             overflow-y: auto; 
             white-space: pre-wrap; 
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.5); 
+            border-left: 5px solid var(--accent-blue);
         }
 
         /* Модальное окно */
-        #modal { display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); }
+        #modal { 
+            display: none; 
+            position: fixed; 
+            z-index: 1000; 
+            left: 0; top: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.85); 
+            backdrop-filter: blur(5px); 
+        }
+
         .modal-box { 
-            background: #161b22; 
-            margin: 2% auto; 
+            background: var(--bg-secondary); 
+            margin: 5vh auto; 
             padding: 30px; 
             width: 90%; 
             max-width: 650px; 
             border-radius: 20px; 
-            border-top: 5px solid #005cc5; 
-            position: relative; 
-            box-shadow: 0 20px 50px rgba(0,0,0,0.6); 
-            max-height: 90vh;
+            border: 1px solid var(--border-color); 
+            position: relative;
+            max-height: 85vh;
             overflow-y: auto;
         }
-        .close { position: absolute; right: 20px; top: 15px; font-size: 28px; cursor: pointer; color: #8b949e; transition: 0.2s; }
-        .close:hover { color: #f85149; }
-        
-        .syntax-note { background: #1c2128; border-left: 4px solid #58a6ff; padding: 12px; margin: 15px 0; font-size: 14px; line-height: 1.4; color: #8b949e; }
-        .syntax-note b { color: #c9d1d9; }
 
-        .example-block { background: #010409; padding: 20px; border-radius: 12px; border: 1px solid #30363d; margin-top: 20px; position: relative; }
-        .example-code { color: #d7dae0; font-family: 'Consolas', monospace; white-space: pre; font-size: 14px; display: block; overflow-x: auto; line-height: 1.5; }
-        
-        .copy-btn { position: absolute; right: 12px; top: -14px; background: #005cc5; color: white; border: none; padding: 8px 16px; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3); transition: 0.2s; }
-        .copy-btn:hover { background: #0366d6; transform: scale(1.05); }
+        .quiz-container {
+            background: #0d1117;
+            border: 1px solid var(--success);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .example-block {
+            background: #010409;
+            padding: 15px;
+            border-radius: 8px;
+            color: #ff7b72;
+            font-family: monospace;
+            margin-top: 10px;
+            display: block;
+            border: 1px dashed var(--border-color);
+        }
+
+        .close-btn { position: absolute; right: 20px; top: 15px; cursor: pointer; font-size: 28px; color: var(--border-color); }
+        .close-btn:hover { color: var(--error); }
     </style>
 </head>
 <body>
 
-<div id="modal">
-    <div class="modal-box">
-        <span class="close" onclick="closeModal()">&times;</span>
-        <h2 id="m-title" style="margin-top:0; color:#58a6ff; font-size: 24px;"></h2>
-        <div id="m-body" style="font-size: 16px; line-height: 1.6; color: #c9d1d9;"></div>
-        
-        <div id="m-syntax" class="syntax-note"></div>
-        
-        <div class="example-block">
-            <button class="copy-btn" onclick="copyExample()">Копировать код</button>
-            <div id="m-code" class="example-code"></div>
-        </div>
-    </div>
+<div id="loader">
+    <h2 style="color: var(--text-link); margin-bottom: 5px;">🐍 Python Academy</h2>
+    <p style="color: #8b949e; font-size: 14px;">Инициализация PyScript Engine...</p>
 </div>
 
 <header>
-    <h2 style="margin:0; font-size: 20px; letter-spacing: 1px;">🐍 PYTHON <span style="color: #58a6ff;">ACADEMY</span></h2>
-    <div id="status" style="font-size: 12px; color: #8b949e; background: #010409; padding: 6px 15px; border-radius: 20px; border: 1px solid #30363d;">Справочник синтаксиса обновлен</div>
+    <div style="display: flex; align-items: center; gap: 15px;">
+        <h2 style="margin:0; font-size: 18px; letter-spacing: 1px;">🐍 PY ACADEMY <span style="color: var(--text-link);">STUDIO</span></h2>
+        <button class="btn btn-share" onclick="shareCode()">🔗 Поделиться кодом</button>
+    </div>
+    <div id="status-tag" style="font-size: 12px; color: var(--success); background: rgba(35, 134, 54, 0.1); padding: 4px 12px; border-radius: 20px; border: 1px solid var(--success);">Система готова</div>
 </header>
 
 <div class="main-container">
-    <div class="sidebar">
-        <script>
-            const commands = [
-                { id: 'print', icon: '📣', title: 'Вывод текста', color: '#ffca28' },
-                { id: 'vars', icon: '📦', title: 'Переменные', color: '#4fc3f7' },
-                { id: 'math', icon: '🧮', title: 'Математика', color: '#ff7043' },
-                { id: 'if', icon: '🛤', title: 'Условия (if)', color: '#ba68c8' },
-                { id: 'lists', icon: '📚', title: 'Списки', color: '#81c784' },
-                { id: 'dicts', icon: '📖', title: 'Словари', color: '#fff176' },
-                { id: 'for', icon: '🔄', title: 'Цикл For', color: '#4db6ac' },
-                { id: 'while', icon: '🔁', title: 'Цикл While', color: '#fb8c00' },
-                { id: 'funcs', icon: '⚙️', title: 'Функции', color: '#f06292' },
-                { id: 'errors', icon: '⚠️', title: 'Ошибки', color: '#e57373' }
-            ];
-
-            document.write(commands.map(cmd => `
-                <div class="nav-card">
-                    <div class="nav-header"><span style="color: ${cmd.color}">${cmd.icon}</span> ${cmd.title}</div>
-                    <button class="btn-info" onclick="openHelp('${cmd.id}')">
-                        <span>🔍</span> Подробнее
-                    </button>
-                </div>
-            `).join(''));
-        </script>
-        
-        <button class="btn-secondary" style="width:100%; margin-top:10px; color:#f85149; padding: 12px; font-weight: bold; border-color: #f8514933;" onclick="clearEditor()">ОЧИСТИТЬ ВСЁ</button>
-    </div>
+    <div class="sidebar" id="lesson-sidebar">
+        </div>
 
     <div class="editor-section">
-        <textarea id="code-input" spellcheck="false" oninput="save()" placeholder="Напиши код здесь..."></textarea>
-        <div class="action-bar">
-            <button id="run-btn" py-click="run">ЗАПУСТИТЬ КОД ▶</button>
-            <button class="btn-secondary" onclick="download()">СКАЧАТЬ .PY</button>
+        <textarea id="code-input" spellcheck="false" placeholder="Напиши свой Python код здесь..."></textarea>
+        
+        <div style="display: flex; gap: 12px;">
+            <button class="btn btn-run" py-click="run">ЗАПУСТИТЬ КОД ▶</button>
+            <button class="btn btn-outline" style="flex:1; color: var(--error);" onclick="clearEditor()">Очистить</button>
         </div>
-        <div id="output">Результат программы появится здесь...</div>
+
+        <div id="output">Результат выполнения появится здесь...</div>
+    </div>
+</div>
+
+<div id="modal">
+    <div class="modal-box">
+        <span class="close-btn" onclick="closeModal()">&times;</span>
+        <h2 id="m-title" style="color: var(--text-link); margin-top: 0;"></h2>
+        <p id="m-body" style="line-height: 1.6;"></p>
+        
+        <div class="quiz-container">
+            <h4 style="margin: 0 0 10px 0; color: var(--success); display: flex; align-items: center; gap: 8px;">🎯 Практическое задание:</h4>
+            <p id="m-quiz-text" style="margin-bottom: 15px; font-style: italic;"></p>
+            <button class="btn btn-run" style="font-size: 14px; padding: 8px 20px;" id="btn-take-quiz">Решать в редакторе</button>
+        </div>
+
+        <div style="margin-top: 25px;">
+            <p style="font-weight: 600; font-size: 14px; margin-bottom: 8px;">Пример синтаксиса:</p>
+            <code class="example-block" id="m-code"></code>
+        </div>
     </div>
 </div>
 
 <script>
-    const explanations = {
-        print: { 
-            title: "Вывод данных (print)", 
-            desc: "Функция <b>print()</b> выводит информацию на экран. Это основной способ общения программы с пользователем.", 
-            syntax: "<b>Синтаксис:</b> Текст всегда пишется внутри <b>кавычек</b> (' ' или \" \"). Сами данные передаются внутри круглых скобок. Несколько элементов можно разделять запятой.",
-            code: 'print("Привет!")\nprint("Счет:", 100)' 
+    const content = {
+        print: {
+            title: "Вывод данных",
+            body: "Функция print() — это основной способ вывести текст или числа на экран. Текст должен быть в кавычках.",
+            quiz: "Выведи в консоль фразу: Я учу Python",
+            code: 'print("Я учу Python")'
         },
-        vars: { 
-            title: "Переменные", 
-            desc: "Переменные — это именованные области памяти для хранения данных (чисел, текста и т.д.).", 
-            syntax: "<b>Синтаксис:</b> Сначала пишется <b>имя</b> (без пробелов), затем знак <b>=</b> (присваивание) и само значение. В Python не нужно указывать тип данных заранее.",
-            code: 'user_name = "Alex"\nscore = 15\nprint(user_name)' 
+        vars: {
+            title: "Переменные",
+            body: "Переменные позволяют хранить данные. Мы просто придумываем имя и через знак '=' даем ему значение.",
+            quiz: "Создай переменную name со своим именем и выведи её на экран.",
+            code: 'name = "Алекс"\nprint(name)'
         },
-        math: { 
-            title: "Математика", 
-            desc: "Python поддерживает все стандартные операции: +, -, *, /.", 
-            syntax: "<b>Синтаксис:</b> <b>**</b> используется для возведения в степень, <b>//</b> для деления нацело, а <b>%</b> для получения остатка. Порядок действий как в математике.",
-            code: 'result = (10 + 2) * 5\npower = 2 ** 3  # 8\nprint(result)' 
-        },
-        if: { 
-            title: "Условия (if / elif / else)", 
-            desc: "Позволяет выполнять разные блоки кода в зависимости от того, истинно условие или ложно.", 
-            syntax: "<b>Синтаксис:</b> После условия ОБЯЗАТЕЛЬНО ставится <b>двоеточие (:)</b>. Весь код внутри условия должен иметь <b>отступ (4 пробела)</b> — так Python понимает, что он относится к этому блоку.",
-            code: 'age = 18\nif age >= 18:\n    print("Доступ открыт")\nelse:\n    print("Рано!")' 
-        },
-        lists: { 
-            title: "Списки (Lists)", 
-            desc: "Список — это упорядоченный набор элементов под одним именем.", 
-            syntax: "<b>Синтаксис:</b> Элементы пишутся внутри <b>квадратных скобок [ ]</b> через запятую. Доступ к элементу идет по <b>индексу</b> (номеру), который начинается с <b>0</b>.",
-            code: 'items = ["Меч", "Щит"]\nitems.append("Зелье")\nprint(items[0]) # Меч' 
-        },
-        dicts: { 
-            title: "Словари (Dictionaries)", 
-            desc: "Словарь хранит данные в формате 'Ключ: Значение'.", 
-            syntax: "<b>Синтаксис:</b> Описывается внутри <b>фигурных скобок { }</b>. Ключ и значение разделяются <b>двоеточием</b>. Ключ — это как слово в обычном словаре, по которому мы ищем перевод.",
-            code: 'player = {"hp": 100, "mp": 50}\nprint(player["hp"])' 
-        },
-        for: { 
-            title: "Цикл For", 
-            desc: "Используется для перебора элементов последовательности (например, списка) или выполнения кода N раз.", 
-            syntax: "<b>Синтаксис:</b> <b>for элемент in список:</b>. Как и в 'if', в конце ставится <b>двоеточие</b>, а следующая строка идет с <b>отступом</b>. range(5) создаст числа от 0 до 4.",
-            code: 'for i in range(3):\n    print(f"Шаг №{i}")' 
-        },
-        while: { 
-            title: "Цикл While", 
-            desc: "Цикл выполняется до тех пор, пока условие остается истинным.", 
-            syntax: "<b>Синтаксис:</b> <b>while условие:</b>. Не забывай менять значение внутри цикла, иначе он станет 'бесконечным' и программа зависнет.",
-            code: 'count = 5\nwhile count > 0:\n    print(count)\n    count -= 1' 
-        },
-        funcs: { 
-            title: "Функции (def)", 
-            desc: "Функция — это многоразовый блок кода, который срабатывает только тогда, когда его вызывают.", 
-            syntax: "<b>Синтаксис:</b> Создается через ключевое слово <b>def</b>, затем имя и скобки <b>( )</b>. Чтобы функция вернула результат в программу, используется <b>return</b>.",
-            code: 'def sum(a, b):\n    return a + b\n\nres = sum(5, 5)\nprint(res)' 
-        },
-        errors: { 
-            title: "Ошибки (try / except)", 
-            desc: "Механизм 'отлова' ошибок, чтобы программа не закрывалась при сбое.", 
-            syntax: "<b>Синтаксис:</b> В блоке <b>try:</b> мы пишем 'опасный' код, а в <b>except:</b> — что делать, если случилась беда. Это предотвращает вылет приложения.",
-            code: 'try:\n    x = 1 / 0\nexcept:\n    print("На ноль делить нельзя!")' 
+        math: {
+            title: "Математика",
+            body: "Python отлично считает. Используй +, -, *, /. Для степени используй **.",
+            quiz: "Вычисли 2 в 10-й степени и выведи результат.",
+            code: 'print(2 ** 10)'
         }
     };
 
-    let currentExample = "";
+    // Генерация карточек в сайдбаре
+    const sidebar = document.getElementById('lesson-sidebar');
+    Object.keys(content).forEach(key => {
+        const item = content[key];
+        sidebar.innerHTML += `
+            <div class="nav-card">
+                <div style="font-weight: 600; margin-bottom: 10px;">${item.title}</div>
+                <button class="btn btn-outline" onclick="openModal('${key}')">📚 Урок и Квиз</button>
+            </div>
+        `;
+    });
 
-    function openHelp(key) {
-        const info = explanations[key];
-        document.getElementById('m-title').innerHTML = info.title;
-        document.getElementById('m-body').innerHTML = info.desc;
-        document.getElementById('m-syntax').innerHTML = info.syntax;
-        document.getElementById('m-code').innerText = info.code;
-        currentExample = info.code;
-        document.getElementById('modal').style.display = "block";
+    function openModal(key) {
+        const data = content[key];
+        document.getElementById('m-title').innerText = data.title;
+        document.getElementById('m-body').innerText = data.body;
+        document.getElementById('m-quiz-text').innerText = data.quiz;
+        document.getElementById('m-code').innerText = data.code;
+        
+        document.getElementById('btn-take-quiz').onclick = () => {
+            const editor = document.getElementById('code-input');
+            editor.value = `# Задание: ${data.quiz}\n\n`;
+            editor.focus();
+            closeModal();
+        };
+        
+        document.getElementById('modal').style.display = 'block';
     }
 
-    function closeModal() { document.getElementById('modal').style.display = "none"; }
-    
-    function copyExample() {
-        navigator.clipboard.writeText(currentExample);
-        const btn = document.querySelector('.copy-btn');
-        btn.innerText = "Скопировано! ✅";
-        setTimeout(() => { btn.innerText = "Копировать код"; }, 1500);
+    function closeModal() { document.getElementById('modal').style.display = 'none'; }
+
+    // Умный редактор: поддержка Tab
+    document.getElementById('code-input').addEventListener('keydown', function(e) {
+        if (e.key === 'Tab') {
+            e.preventDefault();
+            const start = this.selectionStart;
+            const end = this.selectionEnd;
+            this.value = this.value.substring(0, start) + "    " + this.value.substring(end);
+            this.selectionStart = this.selectionEnd = start + 4;
+        }
+    });
+
+    // Функция "Поделиться"
+    function shareCode() {
+        const code = document.getElementById('code-input').value;
+        if(!code) return alert("Сначала напиши код!");
+        
+        const base64 = btoa(unescape(encodeURIComponent(code)));
+        const url = window.location.origin + window.location.pathname + '?code=' + base64;
+        
+        navigator.clipboard.writeText(url).then(() => {
+            alert("Ссылка скопирована! Любой, кто откроет её, увидит твой код в редакторе.");
+        });
     }
 
-    function save() { localStorage.setItem('py_studio_edu', document.getElementById('code-input').value); }
-    function clearEditor() { if(confirm("Стереть всё?")) { document.getElementById('code-input').value = ""; save(); } }
-    
-    function download() {
-        const blob = new Blob([document.getElementById('code-input').value], { type: 'text/plain' });
-        const a = document.createElement('a');
-        a.download = "lesson.py";
-        a.href = URL.createObjectURL(blob);
-        a.click();
-    }
-
+    // Загрузка кода и скрытие лоадера
     window.onload = () => {
-        const saved = localStorage.getItem('py_studio_edu');
-        if(saved) document.getElementById('code-input').value = saved;
-    }
+        const params = new URLSearchParams(window.location.search);
+        if (params.has('code')) {
+            try {
+                const decoded = decodeURIComponent(escape(atob(params.get('code'))));
+                document.getElementById('code-input').value = decoded;
+            } catch(e) { console.error("Ошибка декодирования кода"); }
+        }
+        
+        // Скрываем лоадер через небольшую паузу
+        setTimeout(() => {
+            document.getElementById('loader').style.opacity = '0';
+            setTimeout(() => document.getElementById('loader').style.display = 'none', 500);
+        }, 3500);
+    };
+
+    function clearEditor() { if(confirm("Удалить весь код в редакторе?")) document.getElementById('code-input').value = ""; }
 </script>
 
 <script type="py">
@@ -271,23 +330,28 @@
     from js import document
 
     def run(event):
+        # Очищаем вывод и берем код
         out_div = document.getElementById("output")
         code = document.getElementById("code-input").value
-        out_div.innerText = ""
+        out_div.innerText = "Running..."
         
+        # Перехватываем stdout (стандартный вывод)
         output_buffer = io.StringIO()
         sys.stdout = output_buffer
         sys.stderr = output_buffer
         
         try:
+            # Выполняем код пользователя
             exec(code)
             result = output_buffer.getvalue()
-            out_div.innerText = result if result else "Код выполнен без ошибок."
+            out_div.innerText = result if result else "Код выполнен (без вывода в консоль)."
         except Exception as e:
-            out_div.innerText = f"❌ ОШИБКА:\n{str(e)}"
+            out_div.innerText = f"❌ Ошибка в коде:\n{str(e)}"
         finally:
+            # Возвращаем поток вывода в норму
             sys.stdout = sys.__stdout__
             sys.stderr = sys.__stderr__
 </script>
+
 </body>
 </html>
